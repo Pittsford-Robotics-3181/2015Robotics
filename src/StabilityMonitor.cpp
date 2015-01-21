@@ -17,3 +17,6 @@ StabilityMonitor::~StabilityMonitor() {
 void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
 
 }
+void StabilityMonitor::stabilizeLiftControls(double& vs){
+
+}

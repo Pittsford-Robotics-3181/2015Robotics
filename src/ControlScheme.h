@@ -16,10 +16,11 @@ enum class ControlReferenceFrame {
 };
 class ControlScheme: public ButtonResponder {
 public:
-	ControlScheme(Joystick* drive);
+	ControlScheme(Joystick* drive, Joystick* lift);
 	virtual ~ControlScheme();
 
 	void getDriveControls(double& x, double& y, double&r);
+	void getLiftControls(double& vs);
 	ControlReferenceFrame getDriveReferenceFrame();
 
 	void respondToButton(int button);
@@ -28,6 +29,8 @@ private:
 	bool getPerfectControls(double& x, double& y);
 
 	Joystick* driveStick;
+	Joystick* liftStick;
+
 	//Reference Frame Monitor
 	ButtonMonitor* referenceFrameSwitchMonitor;
 	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;

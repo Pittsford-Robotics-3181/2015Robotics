@@ -14,6 +14,7 @@ public:
 	virtual ~StabilityMonitor();
 
 	void stabilizeDriveControls(double& x, double& y, double&r);
+	void stabilizeLiftControls(double& vs);
 
 };
 

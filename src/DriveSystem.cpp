@@ -13,7 +13,6 @@
 DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro) {
 	driveMotors = new RobotDrive(fl,bl,fr,br);
 	rotationGyro = gyro;
-	stability = new StabilityMonitor();
 }
 
 DriveSystem::~DriveSystem() {

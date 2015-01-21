@@ -11,8 +11,9 @@
 const int REFRENCE_FRAME_BUTTON = 11;
 
 
-ControlScheme::ControlScheme(Joystick* drive) {
+ControlScheme::ControlScheme(Joystick* drive, Joystick* lift) {
 	driveStick = drive;
+	liftStick = lift;
 	referenceFrameSwitchMonitor = new ButtonMonitor(drive,REFRENCE_FRAME_BUTTON,this);
 }
 
@@ -39,6 +40,12 @@ bool ControlScheme::getPerfectControls(double& x, double& y) {
 	x = driveStick->GetRawAxis(5);
 	y = driveStick->GetRawAxis(6);
 	return x != 0 || y != 0;
+}
+/**
+ * TODO: Read Lift Controls
+ */
+void ControlScheme::getLiftControls(double& vs){
+
 }
 
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
