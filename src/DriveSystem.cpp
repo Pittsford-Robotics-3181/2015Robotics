@@ -7,6 +7,12 @@
 
 #include "DriveSystem.h"
 
+const double kFL = 1;
+const double kFR = 1;
+const double kBL = 1;
+const double kBR = 1;
+
+
 DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro) {
 	frontLeft = fl;
 	frontRight = fr;

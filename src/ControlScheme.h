@@ -25,6 +25,8 @@ public:
 	void respondToButton(int button);
 
 private:
+	bool getAbsoluteControls(double& x, double& y);
+
 	Joystick* driveStick;
 	//Reference Frame Monitor
 	ButtonMonitor* referenceFrameSwitchMonitor;
