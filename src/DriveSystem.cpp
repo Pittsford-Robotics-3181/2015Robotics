@@ -36,23 +36,22 @@ void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame 
 	adjustMotors(x,y,r);
 }
 
-/**
- * TODO: Read Gyro in RADIANS
- */
 double DriveSystem::readGyro(){
-
-
-	return 0;
+	double degrees = rotationGyro->GetAngle();
+	double radians = degrees * (-M_PI/180.0);
+	return radians;
 }
-/**
- * TODO: Rotate Reference Frame
- */
+
 void DriveSystem::rotateDriveFrame(double& x, double& y, double& r,double angle){
+	double inX = x;
+	double inY = y;
+	double cosA = cos(angle);
+	double sinA = sin(angle);
 
+	x = cosA*inX - sinA*inY;
+	y = sinA*inX + cosA*inY;
 }
-/**
- * TODO: Calculate and Set motor speeds
- */
+
 void DriveSystem::adjustMotors(double x, double y, double r){
 	//calculate
 	double fl = x + y - r;

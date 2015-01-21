@@ -20,9 +20,6 @@ ControlScheme::~ControlScheme() {
 	delete referenceFrameSwitchMonitor;
 }
 
-/**
- * TODO: Read X, Y, Twist, and apply Throttle
- */
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
 	x = driveStick->GetX();
 	y = driveStick->GetY();
@@ -35,9 +32,9 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 	r *= throttle;
 }
 /**
- * TODO: Read Absolute controls
+ * TODO: Read Perfect controls
  */
-bool getAbsoluteControls(double& x, double& y) {
+bool getPerfectControls(double& x, double& y) {
 	return false;
 }
 

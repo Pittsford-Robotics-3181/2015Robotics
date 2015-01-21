@@ -25,12 +25,12 @@ public:
 	void respondToButton(int button);
 
 private:
-	bool getAbsoluteControls(double& x, double& y);
+	bool getPerfectControls(double& x, double& y);
 
 	Joystick* driveStick;
 	//Reference Frame Monitor
 	ButtonMonitor* referenceFrameSwitchMonitor;
-	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Relative;
+	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
 	std::mutex driveRefLock;
 };
 
