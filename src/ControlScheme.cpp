@@ -26,7 +26,7 @@ ControlScheme::~ControlScheme() {
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
 	x = driveStick->GetX();
 	y = driveStick->GetY();
-	r = driveStick->GetTwist();
+	r = -driveStick->GetTwist();
 
 	//Throttle
 	double throttle = (driveStick->GetThrottle() + 1)/2;
