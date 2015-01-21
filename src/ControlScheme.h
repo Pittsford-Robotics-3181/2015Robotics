@@ -30,7 +30,7 @@ private:
 	Joystick* driveStick;
 	//Reference Frame Monitor
 	ButtonMonitor* referenceFrameSwitchMonitor;
-	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
+	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Relative;
 	std::mutex driveRefLock;
 };
 

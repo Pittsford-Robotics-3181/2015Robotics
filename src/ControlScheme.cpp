@@ -30,7 +30,7 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
  * TODO: Read Absolute controls
  */
 bool getAbsoluteControls(double& x, double& y) {
-
+	return false;
 }
 
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
