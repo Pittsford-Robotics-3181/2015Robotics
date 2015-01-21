@@ -21,10 +21,13 @@ ControlScheme::~ControlScheme() {
 }
 
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
-	x = driveStick->GetX();
-	y = driveStick->GetY();
-	r = -driveStick->GetTwist();
-
+	if (getPerfectControls(x,y)){
+		r = 0;
+	} else {
+		x = driveStick->GetX();
+		y = driveStick->GetY();
+		r = -driveStick->GetTwist();
+	}
 	//Throttle
 	double throttle = (driveStick->GetThrottle() + 1)/2;
 	x *= throttle;
@@ -34,8 +37,10 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 /**
  * TODO: Read Perfect controls
  */
-bool getPerfectControls(double& x, double& y) {
-	return false;
+bool ControlScheme::getPerfectControls(double& x, double& y) {
+	x = driveStick->GetRawAxis(5);
+	y = driveStick->GetRawAxis(6);
+	return x != 0 || y != 0;
 }
 
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
