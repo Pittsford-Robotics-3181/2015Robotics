@@ -34,9 +34,7 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 	y *= throttle;
 	r *= throttle;
 }
-/**
- * TODO: Read Perfect controls
- */
+
 bool ControlScheme::getPerfectControls(double& x, double& y) {
 	x = driveStick->GetRawAxis(5);
 	y = driveStick->GetRawAxis(6);
