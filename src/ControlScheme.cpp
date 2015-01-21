@@ -24,7 +24,15 @@ ControlScheme::~ControlScheme() {
  * TODO: Read X, Y, Twist, and apply Throttle
  */
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
+	x = driveStick->GetX();
+	y = driveStick->GetY();
+	r = driveStick->GetTwist();
 
+	//Throttle
+	double throttle = (driveStick->GetThrottle() + 1)/2;
+	x *= throttle;
+	y *= throttle;
+	r *= throttle;
 }
 /**
  * TODO: Read Absolute controls
