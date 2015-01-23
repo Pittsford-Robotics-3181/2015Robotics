@@ -10,9 +10,6 @@
 LiftSystem::LiftSystem(SpeedController* motor) {
 	liftMotor = motor;
 }
-/**
- * TODO: Implement the Lift system
- */
 void LiftSystem::moveLift(double vs){
-
+	liftMotor->Set(vs);
 }

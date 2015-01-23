@@ -41,9 +41,7 @@ bool ControlScheme::getPerfectControls(double& x, double& y) {
 	y = driveStick->GetRawAxis(6);
 	return x != 0 || y != 0;
 }
-/**
- * TODO: Read Lift Controls
- */
+
 void ControlScheme::getLiftControls(double& vs){
 	if(liftStick->GetRawButton(2)&&liftStick->GetRawButton(3)){
 		vs = 0;

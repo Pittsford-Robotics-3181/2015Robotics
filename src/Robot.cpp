@@ -17,8 +17,8 @@ private:
 		 //Drive System
 		SpeedController* fl = new Talon(0);
 		SpeedController* fr = new Talon(1);
-		SpeedController* bl = new Talon(2);
-		SpeedController* br = new Talon(3);
+		SpeedController* bl = new Talon(3);
+		SpeedController* br = new Talon(2);
 		Gyro* driveGyro = new Gyro(1);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 		//Lift System
