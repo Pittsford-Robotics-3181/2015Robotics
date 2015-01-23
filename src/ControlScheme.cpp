@@ -52,6 +52,7 @@ void ControlScheme::getLiftControls(double& vs){
 	} else {
 		vs = liftStick->GetY();
 	}
+	vs *= (liftStick->GetThrottle() + 1)/2;
 }
 
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
