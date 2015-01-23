@@ -18,10 +18,11 @@ public:
 
 	void driveRobot(double x, double y, double r,ControlReferenceFrame frame);
 
+	StabilityMonitor* stability;
+
 private:
 	Gyro* rotationGyro;
 	RobotDrive* driveMotors;
-	StabilityMonitor* stability;
 
 	//TO BE IMPLEMENTED
 	double readGyro();

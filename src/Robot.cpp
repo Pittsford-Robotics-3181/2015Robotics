@@ -27,10 +27,10 @@ private:
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);
 		Joystick* liftStick = new Joystick(1);
-		controls = new ControlScheme(driveStick);
+		controls = new ControlScheme(driveStick,liftStick);
 
 		//Stability Monitor
-		StabilityMonitor stability = new StabilityMonitor();
+		StabilityMonitor* stability = new StabilityMonitor();
 		drive->stability = stability;
 		lift->stability = stability;
 

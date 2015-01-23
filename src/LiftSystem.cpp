@@ -13,6 +13,6 @@ LiftSystem::LiftSystem(SpeedController* motor) {
 /**
  * TODO: Implement the Lift system
  */
-void moveLift(double vs){
+void LiftSystem::moveLift(double vs){
 
 }
