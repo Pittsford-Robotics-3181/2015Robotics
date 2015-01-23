@@ -45,7 +45,15 @@ bool ControlScheme::getPerfectControls(double& x, double& y) {
  * TODO: Read Lift Controls
  */
 void ControlScheme::getLiftControls(double& vs){
-
+	if(liftStick->GetRawButton(2)&&liftStick->GetRawButton(3)){
+		vs = 0;
+	} else if(liftStick->GetRawButton(3)){
+		vs = 1;
+	} else if(liftStick->GetRawButton(2)){
+		vs = -1;
+	} else {
+		vs = liftStick->GetY();
+	}
 }
 
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
