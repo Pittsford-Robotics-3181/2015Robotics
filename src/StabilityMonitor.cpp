@@ -32,11 +32,11 @@ StabilityMonitor::StabilityMonitor() {
 	jerkR.maximumJerk = 0.1;
 	jerkLift.maximumJerk = 0.1;
 
-	jerkX.maximumAccel = 0.1;
-	jerkY.maximumAccel = 0.1;
-	jerkMag.maximumAccel = 0.1;
-	jerkR.maximumAccel = 0.1;
-	jerkLift.maximumAccel = 0.1;
+	jerkX.maximumAccel = 0.02;
+	jerkY.maximumAccel = 0.02;
+	jerkMag.maximumAccel = 0.02;
+	jerkR.maximumAccel = 0.02;
+	jerkLift.maximumAccel = 0.02;
 }
 
 StabilityMonitor::~StabilityMonitor() {

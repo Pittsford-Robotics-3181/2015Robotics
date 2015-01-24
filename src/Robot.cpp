@@ -10,6 +10,7 @@ private:
 	DriveSystem* drive;
 	ControlScheme* controls;
 	LiftSystem* lift;
+	Timer* autoTimer;
 
 	void RobotInit()
 	{
@@ -37,16 +38,25 @@ private:
 		//Camera
         CameraServer::GetInstance()->SetQuality(50);
      	CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+
+     	//Autonomous
+     	autoTimer = new Timer();
 	}
 
 	void AutonomousInit()
 	{
-
+		autoTimer->Reset();
+		autoTimer->Start();
 	}
 
 	void AutonomousPeriodic()
 	{
-
+		if(autoTimer->Get() > 5) {
+			autoTimer->Stop();
+			drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute);
+		} else {
+			drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute);
+		}
 	}
 
 	void TeleopInit()
