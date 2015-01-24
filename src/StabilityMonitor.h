@@ -11,6 +11,7 @@
 class JerkLimiter {
 public:
 	double maximumJerk;
+	double maximumAccel;
 	void limitJerk(double& control);
 private:
 	double prevControl1=0, prevControl2=0;
