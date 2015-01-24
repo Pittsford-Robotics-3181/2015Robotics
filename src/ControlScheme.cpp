@@ -28,9 +28,9 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 		r = driveStick->GetTwist();
 	}
 	//Deadzone
-	if (fabs(x) < 0.05) x = 0;
-	if (fabs(y) < 0.05) y = 0;
-	if (fabs(r) < 0.05) r = 0;
+	if (fabs(x) < 0.1) x = 0;
+	if (fabs(y) < 0.1) y = 0;
+	if (fabs(r) < 0.1) r = 0;
 
 	//Throttle
 	double throttle = (1-driveStick->GetThrottle())/2;
