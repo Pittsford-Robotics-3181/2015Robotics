@@ -8,7 +8,14 @@
 #ifndef SRC_STABILITYMONITOR_H_
 #define SRC_STABILITYMONITOR_H_
 
-class JerkLimiter;
+class JerkLimiter {
+public:
+	double maximumJerk;
+	void limitJerk(double& control);
+private:
+	double prevControl1=0, prevControl2=0;
+};
+
 
 class StabilityMonitor {
 public:
@@ -18,7 +25,7 @@ public:
 	void stabilizeDriveControls(double& x, double& y, double&r);
 	void stabilizeLiftControls(double& vs);
 private:
-
+	JerkLimiter jerkX, jerkY, jerkMag, jerkR, jerkLift;
 };
 
 #endif /* SRC_STABILITYMONITOR_H_ */
