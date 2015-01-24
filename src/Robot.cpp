@@ -32,6 +32,7 @@ private:
 
 		//Stability Monitor
 		StabilityMonitor* stability = new StabilityMonitor();
+		stability->rotationGyro = driveGyro;
 		drive->stability = stability;
 		lift->stability = stability;
 

@@ -9,40 +9,45 @@
 #include <math.h>
 
 void JerkLimiter::limitJerk(double& control){
-	double jerk = control - 2*prevControl1 + prevControl2;
-	if (fabs(jerk) > maximumJerk){
-		jerk *= maximumJerk/fabs(jerk);
-		control = jerk + 2*prevControl1 - prevControl2;
-	}
-	double accel = control - prevControl1;
+	double accel = control - prevControl;
 	if (fabs(accel) > maximumAccel){
 		accel *= maximumAccel/fabs(accel);
-		control = accel + prevControl1;
+		control = accel + prevControl;
 	}
-	prevControl2 = prevControl1;
-	prevControl1 = control;
+	prevControl = control;
+}
+void MotionCompensator::copensateControl(double& control, double sensorVal){
+	double motionOffset = sensorVal * controlToSensorRatio;
+	if (fabs(motionOffset - prevControl)>tolerance){
+		if (motionOffset > prevControl){
+			sensorVal -= tolerance;
+		} else {
+			sensorVal += tolerance;
+		}
+		motionOffset -= prevControl;
+		control -= motionOffset;
+	}
+	prevControl = control;
 }
 
 
 
 StabilityMonitor::StabilityMonitor() {
-	jerkX.maximumJerk = 0.1;
-	jerkY.maximumJerk = 0.1;
-	jerkMag.maximumJerk = 0.1;
-	jerkR.maximumJerk = 0.1;
-	jerkLift.maximumJerk = 0.1;
-
 	jerkX.maximumAccel = 0.02;
 	jerkY.maximumAccel = 0.02;
 	jerkMag.maximumAccel = 0.02;
 	jerkR.maximumAccel = 0.02;
 	jerkLift.maximumAccel = 0.02;
+
+	rotationComp.controlToSensorRatio = 0.002929;
+	rotationComp.tolerance = 0.05;
 }
 
 StabilityMonitor::~StabilityMonitor() {
 }
 
 void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
+	//Limit Jerk
 	jerkX.limitJerk(x);
 	jerkY.limitJerk(y);
 	jerkR.limitJerk(r);
@@ -53,6 +58,8 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
 		x *= fabs(mag/mag0);
 		y *= fabs(mag/mag0);
 	}
+	//Motion Compensation
+	rotationComp.copensateControl(r,rotationGyro->GetRate());
 }
 void StabilityMonitor::stabilizeLiftControls(double& vs){
 	jerkLift.limitJerk(vs);

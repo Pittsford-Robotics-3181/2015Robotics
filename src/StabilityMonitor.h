@@ -7,26 +7,36 @@
 
 #ifndef SRC_STABILITYMONITOR_H_
 #define SRC_STABILITYMONITOR_H_
+#include <WPILib.h>
 
 class JerkLimiter {
 public:
-	double maximumJerk;
 	double maximumAccel;
 	void limitJerk(double& control);
 private:
-	double prevControl1=0, prevControl2=0;
+	double prevControl = 0;
 };
 
+class MotionCompensator {
+public:
+	double tolerance = 0;
+	double controlToSensorRatio = 1;
+	void copensateControl(double& control, double sensorVal);
+private:
+	double prevControl = 0;
+};
 
 class StabilityMonitor {
 public:
 	StabilityMonitor();
 	virtual ~StabilityMonitor();
+	Gyro* rotationGyro;
 
 	void stabilizeDriveControls(double& x, double& y, double&r);
 	void stabilizeLiftControls(double& vs);
 private:
 	JerkLimiter jerkX, jerkY, jerkMag, jerkR, jerkLift;
+	MotionCompensator rotationComp;
 };
 
 #endif /* SRC_STABILITYMONITOR_H_ */
