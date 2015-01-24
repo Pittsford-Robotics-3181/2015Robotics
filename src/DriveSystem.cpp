@@ -25,7 +25,6 @@ void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame 
 		double angle = readGyro();
 		rotateDriveFrame(x,y,r,angle);
 		//Ouptut Gyro
-		SmartDashboard::PutNumber("GYRO", angle);
 	}
 	stability->stabilizeDriveControls(x,y,r);
 	driveMotors->MecanumDrive_Cartesian(x,y,r);

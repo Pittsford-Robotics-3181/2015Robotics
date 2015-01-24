@@ -27,7 +27,11 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 		y = driveStick->GetY();
 		r = driveStick->GetTwist();
 	}
-	SmartDashboard::PutNumber("Y", y);
+	//Deadzone
+	if (fabs(x) < 0.05) x = 0;
+	if (fabs(y) < 0.05) y = 0;
+	if (fabs(r) < 0.05) r = 0;
+
 	//Throttle
 	double throttle = (1-driveStick->GetThrottle())/2;
 	x *= throttle;
@@ -37,7 +41,6 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 
 bool ControlScheme::getPerfectControls(double& x, double& y, double& r) {
 	int hat = driveStick->GetPOV();
-	SmartDashboard::PutNumber("HAT", hat);
 	if (hat >= 0) {
 		if (hat > 0 && hat < 180) {
 			x = 1;
