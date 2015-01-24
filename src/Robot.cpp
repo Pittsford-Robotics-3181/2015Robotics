@@ -15,11 +15,11 @@ private:
 	{
 		lw = LiveWindow::GetInstance();
 		 //Drive System
-		SpeedController* fl = new Talon(0);
-		SpeedController* fr = new Talon(1);
-		SpeedController* bl = new Talon(3);
-		SpeedController* br = new Talon(2);
-		Gyro* driveGyro = new Gyro(1);
+		SpeedController* fl = new Talon(1);
+		SpeedController* fr = new Talon(0);
+		SpeedController* bl = new Talon(2);
+		SpeedController* br = new Talon(3);
+		Gyro* driveGyro = new Gyro(0);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 		//Lift System
 		SpeedController* lm = new Talon(4);
@@ -59,6 +59,8 @@ private:
 		//Drive
 		double x=0,y=0,r=0;
 		controls->getDriveControls(x,y,r);
+
+
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		drive->driveRobot(x,y,r,referenceFrame);
 		//Lift

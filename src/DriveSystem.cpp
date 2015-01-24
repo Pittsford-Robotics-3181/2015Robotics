@@ -13,6 +13,7 @@
 DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro) {
 	driveMotors = new RobotDrive(fl,bl,fr,br);
 	rotationGyro = gyro;
+	rotationGyro->Reset();
 }
 
 DriveSystem::~DriveSystem() {
@@ -23,6 +24,8 @@ void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame 
 	if (referenceFrame == ControlReferenceFrame::Absolute){
 		double angle = readGyro();
 		rotateDriveFrame(x,y,r,angle);
+		//Ouptut Gyro
+		SmartDashboard::PutNumber("GYRO", angle);
 	}
 	stability->stabilizeDriveControls(x,y,r);
 	driveMotors->MecanumDrive_Cartesian(x,y,r);

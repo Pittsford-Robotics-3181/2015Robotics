@@ -26,7 +26,7 @@ public:
 	void respondToButton(int button);
 
 private:
-	bool getPerfectControls(double& x, double& y);
+	bool getPerfectControls(double& x, double& y, double& r);
 
 	Joystick* driveStick;
 	Joystick* liftStick;
