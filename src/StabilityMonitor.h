@@ -8,6 +8,8 @@
 #ifndef SRC_STABILITYMONITOR_H_
 #define SRC_STABILITYMONITOR_H_
 
+class JerkLimiter;
+
 class StabilityMonitor {
 public:
 	StabilityMonitor();
@@ -15,6 +17,7 @@ public:
 
 	void stabilizeDriveControls(double& x, double& y, double&r);
 	void stabilizeLiftControls(double& vs);
+private:
 
 };
 

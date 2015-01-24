@@ -14,6 +14,10 @@ DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedControll
 	driveMotors = new RobotDrive(fl,bl,fr,br);
 	rotationGyro = gyro;
 	rotationGyro->Reset();
+	driveMotors->SetInvertedMotor(RobotDrive::kFrontLeftMotor,false);
+	driveMotors->SetInvertedMotor(RobotDrive::kFrontRightMotor,true);
+	driveMotors->SetInvertedMotor(RobotDrive::kRearLeftMotor,false);
+	driveMotors->SetInvertedMotor(RobotDrive::kRearRightMotor,true);
 }
 
 DriveSystem::~DriveSystem() {
