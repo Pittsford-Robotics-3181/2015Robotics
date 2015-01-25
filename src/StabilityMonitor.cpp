@@ -18,12 +18,7 @@ void JerkLimiter::limitJerk(double& control){
 }
 void MotionCompensator::copensateControl(double& control, double sensorVal){
 	double motionOffset = sensorVal * controlToSensorRatio;
-	if (fabs(motionOffset - prevControl)>tolerance){
-		if (motionOffset > prevControl){
-			sensorVal -= tolerance;
-		} else {
-			sensorVal += tolerance;
-		}
+	if (fabs(motionOffset) > fabs(control) || control/motionOffset < 0){
 		motionOffset -= prevControl;
 		control -= motionOffset;
 	}
@@ -40,7 +35,6 @@ StabilityMonitor::StabilityMonitor() {
 	jerkLift.maximumAccel = 0.02;
 
 	rotationComp.controlToSensorRatio = 0.002929;
-	rotationComp.tolerance = 0.05;
 }
 
 StabilityMonitor::~StabilityMonitor() {
@@ -58,6 +52,9 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
 		x *= fabs(mag/mag0);
 		y *= fabs(mag/mag0);
 	}
+	//Tilt Compensation
+	x += rollGyro.GetAngle() * 0.0;
+	y += pitchGyro.GetAngle() * 0.0;
 	//Motion Compensation
 	rotationComp.copensateControl(r,rotationGyro->GetRate());
 }
