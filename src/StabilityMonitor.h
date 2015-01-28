@@ -19,7 +19,7 @@ private:
 
 class MotionCompensator {
 public:
-	double controlToSensorRatio = 1;
+	double controlToSensorRatio = 1, tolerance = 0;
 	void copensateControl(double& control, double sensorVal);
 private:
 	double prevControl = 0;
@@ -29,7 +29,7 @@ class StabilityMonitor {
 public:
 	StabilityMonitor();
 	virtual ~StabilityMonitor();
-	Gyro* rotationGyro, rollGyro, pitchGyro;
+	Gyro* rotationGyro;//, *rollGyro, *pitchGyro;
 
 	void stabilizeDriveControls(double& x, double& y, double&r);
 	void stabilizeLiftControls(double& vs);

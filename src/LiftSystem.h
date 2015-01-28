@@ -11,14 +11,17 @@
 #include "StabilityMonitor.h"
 class LiftSystem {
 public:
-	LiftSystem(SpeedController* motor);
+	LiftSystem(SpeedController* motor,Encoder* encoder);
 
 	void moveLift(double vs);
+
+	void moveToHeight(double height, double speedScale = 1.0);
 
 	StabilityMonitor* stability;
 
 private:
 	SpeedController* liftMotor;
+	Encoder* liftEncoder;
 };
 
 #endif /* SRC_LIFTSYSTEM_H_ */

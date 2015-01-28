@@ -8,17 +8,19 @@
 #include "ControlScheme.h"
 #include <mutex>
 
-const int REFRENCE_FRAME_BUTTON = 11;
-
+const int ABSOLUTE_REFRENCE_FRAME_BUTTON = 11;
+const int RELATIVE_REFRENCE_FRAME_BUTTON = 12;
 
 ControlScheme::ControlScheme(Joystick* drive, Joystick* lift) {
 	driveStick = drive;
 	liftStick = lift;
-	referenceFrameSwitchMonitor = new ButtonMonitor(drive,REFRENCE_FRAME_BUTTON,this);
+	absoluteButtonMonitor = new ButtonMonitor(drive,ABSOLUTE_REFRENCE_FRAME_BUTTON,this);
+	relativeButtonMonitor = new ButtonMonitor(drive,RELATIVE_REFRENCE_FRAME_BUTTON,this);
 }
 
 ControlScheme::~ControlScheme() {
-	delete referenceFrameSwitchMonitor;
+	delete absoluteButtonMonitor;
+	delete relativeButtonMonitor;
 }
 
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
@@ -85,12 +87,13 @@ ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
 }
 
 void ControlScheme::respondToButton(int button){
-	if (button == REFRENCE_FRAME_BUTTON){
+	if (button == ABSOLUTE_REFRENCE_FRAME_BUTTON){
 		driveRefLock.lock();
-		switch(driveReferenceFrame){
-		case ControlReferenceFrame::Absolute: driveReferenceFrame = ControlReferenceFrame::Relative; break;
-		case ControlReferenceFrame::Relative: driveReferenceFrame = ControlReferenceFrame::Absolute; break;
-		}
+		driveReferenceFrame = ControlReferenceFrame::Absolute;
+		driveRefLock.unlock();
+	} else  if (button == RELATIVE_REFRENCE_FRAME_BUTTON) {
+		driveRefLock.lock();
+		driveReferenceFrame = ControlReferenceFrame::Relative;
 		driveRefLock.unlock();
 	}
 }

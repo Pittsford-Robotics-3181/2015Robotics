@@ -24,7 +24,8 @@ private:
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 		//Lift System
 		SpeedController* lm = new Talon(4);
-		lift = new LiftSystem(lm);
+		Encoder* le = new Encoder((uint32_t)0,(uint32_t)0);
+		lift = new LiftSystem(lm,le);
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);
 		Joystick* liftStick = new Joystick(1);
@@ -33,15 +34,17 @@ private:
 		//Stability Monitor
 		StabilityMonitor* stability = new StabilityMonitor();
 		stability->rotationGyro = driveGyro;
+	//	stability->rollGyro = new Gyro(1);
+		//stability->pitchGyro = new Gyro(2);
 		drive->stability = stability;
 		lift->stability = stability;
 
 		//Camera
-        CameraServer::GetInstance()->SetQuality(50);
-     	CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+     //   CameraServer::GetInstance()->SetQuality(50);
+    // 	CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 
      	//Autonomous
-     	autoTimer = new Timer();
+   //  	autoTimer = new Timer();
 	}
 
 	void AutonomousInit()

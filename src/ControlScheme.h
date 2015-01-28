@@ -32,7 +32,8 @@ private:
 	Joystick* liftStick;
 
 	//Reference Frame Monitor
-	ButtonMonitor* referenceFrameSwitchMonitor;
+	ButtonMonitor* absoluteButtonMonitor;
+	ButtonMonitor* relativeButtonMonitor;
 	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
 	std::mutex driveRefLock;
 };
