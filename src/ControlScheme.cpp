@@ -77,7 +77,9 @@ void ControlScheme::getLiftControls(double& vs){
 	}
 	vs *= (1 + liftStick->GetThrottle())/2;
 }
-
+ControlAlignmentMode ControlScheme::getAlignmentMode(){
+	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;
+}
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
 	ControlReferenceFrame retFrame;
 	driveRefLock.lock();

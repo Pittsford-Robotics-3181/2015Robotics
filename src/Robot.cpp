@@ -2,6 +2,7 @@
 #include "ControlScheme.h"
 #include "DriveSystem.h"
 #include "LiftSystem.h"
+#include "AlignmentGuide.h"
 
 class Robot: public IterativeRobot
 {
@@ -10,6 +11,7 @@ private:
 	DriveSystem* drive;
 	ControlScheme* controls;
 	LiftSystem* lift;
+	AlignmentGuide* alignment;
 	Timer* autoTimer;
 
 	void RobotInit()
@@ -40,6 +42,12 @@ private:
 		//stability->pitchGyro = new Gyro(2);
 		drive->stability = stability;
 		lift->stability = stability;
+
+		//Alignment Guide
+		Ultrasonic* leftUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
+		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
+		alignment = new AlignmentGuide(leftUS,rightUS);
+
 
 		//Camera
 		//CameraServer::GetInstance()->SetQuality(50);
@@ -74,9 +82,16 @@ private:
 	{
 		//Drive
 		double x=0,y=0,r=0;
-		controls->getDriveControls(x,y,r);
-
-
+		switch(controls->getAlignmentMode()){
+		case ControlAlignmentMode::Align:
+			alignment->enable();
+			r = alignment->getRotationSpeed();
+			break;
+		case ControlAlignmentMode::Drive:
+			alignment->disable();
+			controls->getDriveControls(x,y,r);
+			break;
+		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		drive->driveRobot(x,y,r,referenceFrame);
 		//Lift

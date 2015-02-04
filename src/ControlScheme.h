@@ -14,6 +14,9 @@
 enum class ControlReferenceFrame {
 	Absolute,Relative
 };
+enum class ControlAlignmentMode {
+	Align, Drive
+};
 class ControlScheme: public ButtonResponder {
 public:
 	ControlScheme(Joystick* drive, Joystick* lift);
@@ -22,6 +25,7 @@ public:
 	void getDriveControls(double& x, double& y, double&r);
 	void getLiftControls(double& vs);
 	ControlReferenceFrame getDriveReferenceFrame();
+	ControlAlignmentMode getAlignmentMode();
 
 	void respondToButton(int button);
 
