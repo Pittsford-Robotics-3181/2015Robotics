@@ -11,6 +11,11 @@ private:
 	ControlScheme* controls;
 	LiftSystem* lift;
 	Timer* autoTimer;
+	// Object for dealing with the Power Distribution Panel (PDP).
+	PowerDistributionPanel m_pdp;
+	USBCamera* cam = new USBCamera ("camera", true);
+	// Update every 5milliseconds/0.005 seconds.
+	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
@@ -23,7 +28,7 @@ private:
 		Gyro* driveGyro = new Gyro(0);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 		//Lift System
-		SpeedController* lm = new Talon(4);
+		SpeedController* lm = new CANTalon(4);
 		Encoder* le = new Encoder((uint32_t)0,(uint32_t)0);
 		lift = new LiftSystem(lm,le);
 		//Control Scheme
@@ -42,6 +47,8 @@ private:
 		//Camera
      //   CameraServer::GetInstance()->SetQuality(50);
     // 	CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+
+
 
      	//Autonomous
    //  	autoTimer = new Timer();
@@ -81,6 +88,22 @@ private:
 		double vs=0;
 		controls->getLiftControls(vs);
 		lift->moveLift(vs);
+
+		//PDP and Carmera
+				// Get the current going through channel 7, in Amperes.
+				// The PDP returns the current in increments of 0.125A.
+				// At low currents the current readings tend to be less accurate.
+				SmartDashboard::PutNumber("Front Left 13", m_pdp.GetCurrent(13));
+				SmartDashboard::PutNumber("Back Left 12", m_pdp.GetCurrent(12));
+				SmartDashboard::PutNumber("Front Right 2", m_pdp.GetCurrent(2));
+				SmartDashboard::PutNumber("Back Right 3", m_pdp.GetCurrent(3));
+				// Get the voltage going into the PDP, in Volts.
+				// The PDP returns the voltage in increments of 0.05 Volts.
+				SmartDashboard::PutNumber("Voltage", m_pdp.GetVoltage());
+				// Retrieves the temperature of the PDP, in degrees Celsius.
+				SmartDashboard::PutNumber("Temperature", m_pdp.GetTemperature());
+
+
 	}
 
 	void TestPeriodic()

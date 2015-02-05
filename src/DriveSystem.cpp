@@ -8,8 +8,6 @@
 #include "DriveSystem.h"
 #include <math.h>
 
-
-
 DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro) {
 	driveMotors = new RobotDrive(fl,bl,fr,br);
 	rotationGyro = gyro;
@@ -25,13 +23,14 @@ DriveSystem::~DriveSystem() {
 }
 
 void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame referenceFrame){
-	if (referenceFrame == ControlReferenceFrame::Absolute){
-		double angle = readGyro();
-		rotateDriveFrame(x,y,r,angle);
-		//Ouptut Gyro
-	}
-	stability->stabilizeDriveControls(x,y,r);
-	driveMotors->MecanumDrive_Cartesian(x,y,r);
+//	if (referenceFrame == ControlReferenceFrame::Absolute){
+//		double angle = readGyro();
+//		rotateDriveFrame(x,y,r,angle);
+//		//Ouptut Gyro
+//	}
+//	stability->stabilizeDriveControls(x,y,r);
+	double angle = readGyro();
+	driveMotors->MecanumDrive_Cartesian(x,y,r,angle);
 }
 
 double DriveSystem::readGyro(){
