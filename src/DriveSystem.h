@@ -22,11 +22,16 @@ public:
 
 private:
 	Gyro* rotationGyro;
-	RobotDrive* driveMotors;
+	SpeedController* m_fl;
+	SpeedController* m_fr;
+	SpeedController* m_bl;
+	SpeedController* m_br;
+
 
 	//TO BE IMPLEMENTED
 	double readGyro();
 	void rotateDriveFrame(double& x, double& y, double& r,double angle);
+	void adjustMotors(double x, double y, double r);
 
 };
 

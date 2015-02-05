@@ -2,6 +2,7 @@
 #include "ControlScheme.h"
 #include "DriveSystem.h"
 #include "LiftSystem.h"
+#include "AlignmentGuide.h"
 
 class Robot: public IterativeRobot
 {
@@ -10,6 +11,7 @@ private:
 	DriveSystem* drive;
 	ControlScheme* controls;
 	LiftSystem* lift;
+	AlignmentGuide* alignment;
 	Timer* autoTimer;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel m_pdp;
@@ -20,17 +22,19 @@ private:
 	void RobotInit()
 	{
 		lw = LiveWindow::GetInstance();
-		 //Drive System
+		//Drive System
 		SpeedController* fl = new Talon(0);
 		SpeedController* fr = new Talon(1);
 		SpeedController* bl = new Talon(3);
 		SpeedController* br = new Talon(2);
 		Gyro* driveGyro = new Gyro(0);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
+
 		//Lift System
 		SpeedController* lm = new CANTalon(4);
 		Encoder* le = new Encoder((uint32_t)0,(uint32_t)0);
 		lift = new LiftSystem(lm,le);
+
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);
 		Joystick* liftStick = new Joystick(1);
@@ -39,19 +43,30 @@ private:
 		//Stability Monitor
 		StabilityMonitor* stability = new StabilityMonitor();
 		stability->rotationGyro = driveGyro;
-	//	stability->rollGyro = new Gyro(1);
+		//stability->rollGyro = new Gyro(1);
 		//stability->pitchGyro = new Gyro(2);
 		drive->stability = stability;
 		lift->stability = stability;
 
-		//Camera
-     //   CameraServer::GetInstance()->SetQuality(50);
-    // 	CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		//Alignment Guide
+		Ultrasonic* leftUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
+		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
+		alignment = new AlignmentGuide(leftUS,rightUS);
 
+
+		//Camera
+		//CameraServer::GetInstance()->SetQuality(50);
+		//CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+
+<<<<<<< HEAD
 
 
      	//Autonomous
    //  	autoTimer = new Timer();
+=======
+		//Autonomous
+		//autoTimer = new Timer();
+>>>>>>> 1e112ae48e6bfcdfa07d788e54b0483c254d81a6
 	}
 
 	void AutonomousInit()
@@ -79,9 +94,16 @@ private:
 	{
 		//Drive
 		double x=0,y=0,r=0;
-		controls->getDriveControls(x,y,r);
-
-
+		switch(controls->getAlignmentMode()){
+		case ControlAlignmentMode::Align:
+			alignment->enable();
+			r = alignment->getRotationSpeed();
+			break;
+		case ControlAlignmentMode::Drive:
+			alignment->disable();
+			controls->getDriveControls(x,y,r);
+			break;
+		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		drive->driveRobot(x,y,r,referenceFrame);
 		//Lift
