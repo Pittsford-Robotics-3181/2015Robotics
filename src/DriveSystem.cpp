@@ -26,14 +26,12 @@ DriveSystem::~DriveSystem() {
 }
 
 void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame referenceFrame){
-//	if (referenceFrame == ControlReferenceFrame::Absolute){
-//		double angle = readGyro();
-//		rotateDriveFrame(x,y,r,angle);
-//		//Ouptut Gyro
-//	}
-//	stability->stabilizeDriveControls(x,y,r);
-	double angle = readGyro();
-	driveMotors->MecanumDrive_Cartesian(x,y,r,angle);
+	if (referenceFrame == ControlReferenceFrame::Absolute){
+		double angle = readGyro();
+		rotateDriveFrame(x,y,r,angle);
+	}
+	stability->stabilizeDriveControls(x,y,r);
+	adjustMotors(x,y,r);
 }
 
 double DriveSystem::readGyro(){

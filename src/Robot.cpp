@@ -54,19 +54,9 @@ private:
 		alignment = new AlignmentGuide(leftUS,rightUS);
 
 
-		//Camera
-		//CameraServer::GetInstance()->SetQuality(50);
-		//CameraServer::GetInstance()->StartAutomaticCapture("cam1");
-
-<<<<<<< HEAD
-
-
      	//Autonomous
-   //  	autoTimer = new Timer();
-=======
-		//Autonomous
-		//autoTimer = new Timer();
->>>>>>> 1e112ae48e6bfcdfa07d788e54b0483c254d81a6
+     	autoTimer = new Timer();
+
 	}
 
 	void AutonomousInit()
