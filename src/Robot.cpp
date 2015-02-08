@@ -33,7 +33,8 @@ private:
 		//Lift System
 		SpeedController* lm = new CANTalon(4);
 		Encoder* le = new Encoder((uint32_t)0,(uint32_t)0);
-		lift = new LiftSystem(lm,le);
+		DigitalInput *ls = new DigitalInput(0);
+		lift = new LiftSystem(lm,le,ls);
 
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);
