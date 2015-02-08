@@ -7,15 +7,19 @@
 
 #include <LiftSystem.h>
 
-LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* limitSwitch) {
+LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch) {
 	liftMotor = motor;
 	liftEncoder = encoder;
 	liftEncoder->Reset();
 	liftEncoder->SetDistancePerPulse(0);
-	upperLimit = limitSwitch;
+	upperLimit = upperSwitch;
+	lowerLimit = lowerSwitch;
 }
 void LiftSystem::moveLift(double vs){
 	if (vs > 0 && upperLimit->Get()){
+		vs = 0;
+	}
+	if (vs < 0 && lowerLimit->Get()){
 		vs = 0;
 	}
 	stability->stabilizeLiftControls(vs);

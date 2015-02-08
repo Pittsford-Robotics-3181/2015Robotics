@@ -11,7 +11,7 @@
 #include "StabilityMonitor.h"
 class LiftSystem {
 public:
-	LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* limitSwitch);
+	LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch);
 
 	void moveLift(double vs);
 
@@ -23,6 +23,7 @@ private:
 	SpeedController* liftMotor;
 	Encoder* liftEncoder;
 	DigitalInput* upperLimit;
+	DigitalInput* lowerLimit;
 };
 
 #endif /* SRC_LIFTSYSTEM_H_ */
