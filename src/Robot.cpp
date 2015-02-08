@@ -23,18 +23,18 @@ private:
 	{
 		lw = LiveWindow::GetInstance();
 		//Drive System
-		SpeedController* fl = new Talon(0);
-		SpeedController* fr = new Talon(1);
-		SpeedController* bl = new Talon(3);
-		SpeedController* br = new Talon(2);
+		SpeedController* fl = new CANTalon(1);
+		SpeedController* fr = new CANTalon(2);
+		SpeedController* bl = new CANTalon(4);
+		SpeedController* br = new CANTalon(3);
 		Gyro* driveGyro = new Gyro(0);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 
 		//Lift System
-		SpeedController* lm = new CANTalon(4);
-		Encoder* le = new Encoder((uint32_t)0,(uint32_t)0);
-		DigitalInput *uls = new DigitalInput(0);
-		DigitalInput *lls = new DigitalInput(0);
+		SpeedController* lm = new CANTalon(5);
+		Encoder* le = new Encoder((uint32_t)0,(uint32_t)1);
+		DigitalInput *uls = new DigitalInput(3);
+		DigitalInput *lls = new DigitalInput(2);
 		lift = new LiftSystem(lm,le,uls,lls);
 
 		//Control Scheme
