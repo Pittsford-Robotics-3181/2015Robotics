@@ -75,6 +75,7 @@ void ControlScheme::getLiftControls(double& vs){
 	} else {
 		vs = -liftStick->GetY();
 	}
+<<<<<<< HEAD
 }
 
 bool ControlScheme::isRotationCompensationDisabled(){
@@ -85,6 +86,9 @@ bool ControlScheme::isRotationCompensationDisabled(){
 		rotationCompensationEnabledState = true;
 	}
 	return rotationCompensationEnabledState;
+=======
+	//vs *= (1 + liftStick->GetThrottle())/2;
+>>>>>>> branch 'master' of https://github.com/Pittsford-Robotics-3181/2015Robotics.git
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
 	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;

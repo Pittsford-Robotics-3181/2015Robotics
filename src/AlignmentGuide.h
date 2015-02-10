@@ -29,3 +29,16 @@ private:
 };
 
 #endif /* SRC_ALIGNMENTGUIDE_H_ */
+
+/*
+ * Add this property to Robot Class
+ *
+ * Ultrasonic* sonar;
+ *
+ *
+ * Initailize it Ultrasonic(5,6) in Robot Constructor
+ *
+ * In teleop Init
+ * 	SmartDashboard::PutNumber("Sonar", sonar.GetRangeInches());
+ *
+ */
