@@ -73,9 +73,9 @@ void ControlScheme::getLiftControls(double& vs){
 	} else if(liftStick->GetRawButton(2)){
 		vs = -1;
 	} else {
-		vs = liftStick->GetY();
+		vs = -liftStick->GetY();
 	}
-	vs *= (1 + liftStick->GetThrottle())/2;
+	//vs *= (1 + liftStick->GetThrottle())/2;
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
 	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;

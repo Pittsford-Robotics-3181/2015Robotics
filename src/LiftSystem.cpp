@@ -16,12 +16,12 @@ LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upp
 	lowerLimit = lowerSwitch;
 }
 void LiftSystem::moveLift(double vs){
-	if (vs > 0 && upperLimit->Get()){
+	/*if (vs > 0 && upperLimit->Get()){
 		vs = 0;
 	}
 	if (vs < 0 && lowerLimit->Get()){
 		vs = 0;
-	}
+	}*/
 	stability->stabilizeLiftControls(vs);
 	liftMotor->Set(vs);
 }
