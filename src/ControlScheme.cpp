@@ -73,9 +73,8 @@ void ControlScheme::getLiftControls(double& vs){
 	} else if(liftStick->GetRawButton(2)){
 		vs = -1;
 	} else {
-		vs = -liftStick->GetY();
+		vs = liftStick->GetY();
 	}
-<<<<<<< HEAD
 }
 
 bool ControlScheme::isRotationCompensationDisabled(){
