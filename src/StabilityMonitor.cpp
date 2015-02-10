@@ -42,7 +42,8 @@ StabilityMonitor::StabilityMonitor() {
 StabilityMonitor::~StabilityMonitor() {
 }
 
-void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
+void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r,
+		bool rotationCompensationEnabledState){
 	//Limit Jerk
 	jerkX.limitJerk(x);
 	jerkY.limitJerk(y);
@@ -58,8 +59,10 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r){
 //	x += rollGyro->GetAngle() * 0.0;
 //	y += pitchGyro->GetAngle() * 0.0;
 	//Motion Compensation
+	if(rotationCompensationEnabledState){
 	rotationComp.tolerance = 0.05 + fabs(x)/10;
 	rotationComp.compensateControl(r,rotationGyro->GetRate());
+	}
 }
 void StabilityMonitor::stabilizeLiftControls(double& vs){
 	jerkLift.limitJerk(vs);

@@ -97,13 +97,19 @@ private:
 			break;
 		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
-		drive->driveRobot(x,y,r,referenceFrame);
+
+		drive->driveRobot(x,y,r,referenceFrame,controls->isRotationCompensationDisabled());
 		//Lift
 		double vs=0;
 		controls->getLiftControls(vs);
 		lift->moveLift(vs);
 
 		//PDP and Carmera
+				SmartDashboard::PutNumber("X", x);
+				SmartDashboard::PutNumber("Y", y);
+				SmartDashboard::PutNumber("R", r);
+
+				SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
 				// Get the current going through channel 7, in Amperes.
 				// The PDP returns the current in increments of 0.125A.
 				// At low currents the current readings tend to be less accurate.

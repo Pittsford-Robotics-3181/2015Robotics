@@ -31,7 +31,8 @@ public:
 	virtual ~StabilityMonitor();
 	Gyro* rotationGyro = NULL;//, *rollGyro, *pitchGyro;
 
-	void stabilizeDriveControls(double& x, double& y, double&r);
+	void stabilizeDriveControls(double& x, double& y, double& r,
+			bool rotationCompensationEnabledState);
 	void stabilizeLiftControls(double& vs);
 private:
 	JerkLimiter jerkX, jerkY, jerkMag, jerkR, jerkLift;

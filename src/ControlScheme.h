@@ -24,6 +24,7 @@ public:
 
 	void getDriveControls(double& x, double& y, double&r);
 	void getLiftControls(double& vs);
+	bool isRotationCompensationDisabled();
 	ControlReferenceFrame getDriveReferenceFrame();
 	ControlAlignmentMode getAlignmentMode();
 
@@ -31,6 +32,7 @@ public:
 
 private:
 	bool getPerfectControls(double& x, double& y, double& r);
+	bool rotationCompensationEnabledState;
 
 	Joystick* driveStick;
 	Joystick* liftStick;

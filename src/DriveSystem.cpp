@@ -7,6 +7,7 @@
 
 #include "DriveSystem.h"
 #include <math.h>
+#include "StabilityMonitor.h"
 
 const double kFL = 1;
 const double kFR = -1;
@@ -25,12 +26,13 @@ DriveSystem::~DriveSystem() {
 
 }
 
-void DriveSystem::driveRobot(double x, double y, double r,ControlReferenceFrame referenceFrame){
+void DriveSystem::driveRobot(double x, double y, double r,
+		ControlReferenceFrame referenceFrame, bool rotationCompensationEnabledState){
 	if (referenceFrame == ControlReferenceFrame::Absolute){
 		double angle = readGyro();
 		rotateDriveFrame(x,y,r,angle);
 	}
-	stability->stabilizeDriveControls(x,y,r);
+	stability->stabilizeDriveControls(x,y,r,true);
 	adjustMotors(x,y,r);
 }
 

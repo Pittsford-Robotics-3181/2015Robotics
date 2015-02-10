@@ -73,9 +73,18 @@ void ControlScheme::getLiftControls(double& vs){
 	} else if(liftStick->GetRawButton(2)){
 		vs = -1;
 	} else {
-		vs = liftStick->GetY();
+		vs = -liftStick->GetY();
 	}
-	vs *= (1 + liftStick->GetThrottle())/2;
+}
+
+bool ControlScheme::isRotationCompensationDisabled(){
+	if(driveStick->GetRawButton(9)){
+		rotationCompensationEnabledState = false;
+	}
+	else if(driveStick->GetRawButton(10)){
+		rotationCompensationEnabledState = true;
+	}
+	return rotationCompensationEnabledState;
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
 	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;
