@@ -51,12 +51,13 @@ private:
 		drive->stability = stability;
 		lift->stability = stability;
 
-		//Alignment Guide
+	/*	//Alignment Guide
 		Ultrasonic* leftUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		alignment = new AlignmentGuide(leftUS,rightUS);
-
+*/
 		sonar = new Ultrasonic(5,6);
+		sonar->SetAutomaticMode(true);
 
 
      	//Autonomous
@@ -91,11 +92,11 @@ private:
 		double x=0,y=0,r=0;
 		switch(controls->getAlignmentMode()){
 		case ControlAlignmentMode::Align:
-			alignment->enable();
-			r = alignment->getRotationSpeed();
+		///	alignment->enable();
+		//	r = alignment->getRotationSpeed();
 			break;
 		case ControlAlignmentMode::Drive:
-			alignment->disable();
+			//alignment->disable();
 			controls->getDriveControls(x,y,r);
 			break;
 		}
