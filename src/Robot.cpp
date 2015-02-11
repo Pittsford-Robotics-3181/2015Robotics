@@ -97,8 +97,8 @@ private:
 			break;
 		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
-
-		drive->driveRobot(x,y,r,referenceFrame,controls->isRotationCompensationDisabled());
+		bool rotationComp = controls->isRotationCompensationDisabled();
+		drive->driveRobot(x,y,r,referenceFrame,rotationComp);
 		//Lift
 		double vs=0;
 		controls->getLiftControls(vs);

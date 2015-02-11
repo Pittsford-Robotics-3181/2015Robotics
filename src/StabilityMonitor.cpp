@@ -59,9 +59,11 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r,
 //	x += rollGyro->GetAngle() * 0.0;
 //	y += pitchGyro->GetAngle() * 0.0;
 	//Motion Compensation
-	if(rotationCompensationEnabledState){
+	double rot = r;
 	rotationComp.tolerance = 0.05 + fabs(x)/10;
-	rotationComp.compensateControl(r,rotationGyro->GetRate());
+	rotationComp.compensateControl(rot,rotationGyro->GetRate());
+	if(rotationCompensationEnabledState){
+		r = rot;
 	}
 }
 void StabilityMonitor::stabilizeLiftControls(double& vs){

@@ -6,21 +6,15 @@
  */
 
 #include "ControlScheme.h"
-#include <mutex>
 
 const int ABSOLUTE_REFRENCE_FRAME_BUTTON = 11;
 const int RELATIVE_REFRENCE_FRAME_BUTTON = 12;
+const int ENABLE_ROTATION_COMPENSATION_BUTTON = 9;
+const int DISABLE_ROTATION_COMPENSATION_BUTTON = 10;
 
 ControlScheme::ControlScheme(Joystick* drive, Joystick* lift) {
 	driveStick = drive;
 	liftStick = lift;
-	absoluteButtonMonitor = new ButtonMonitor(drive,ABSOLUTE_REFRENCE_FRAME_BUTTON,this);
-	relativeButtonMonitor = new ButtonMonitor(drive,RELATIVE_REFRENCE_FRAME_BUTTON,this);
-}
-
-ControlScheme::~ControlScheme() {
-	delete absoluteButtonMonitor;
-	delete relativeButtonMonitor;
 }
 
 void ControlScheme::getDriveControls(double& x, double& y, double&r){
@@ -78,36 +72,24 @@ void ControlScheme::getLiftControls(double& vs){
 }
 
 bool ControlScheme::isRotationCompensationDisabled(){
-	if(driveStick->GetRawButton(9)){
+	if(driveStick->GetRawButton(ENABLE_ROTATION_COMPENSATION_BUTTON)){
 		rotationCompensationEnabledState = false;
 	}
-	else if(driveStick->GetRawButton(10)){
+	else if(driveStick->GetRawButton(DISABLE_ROTATION_COMPENSATION_BUTTON)){
 		rotationCompensationEnabledState = true;
 	}
 	return rotationCompensationEnabledState;
-=======
 	//vs *= (1 + liftStick->GetThrottle())/2;
->>>>>>> branch 'master' of https://github.com/Pittsford-Robotics-3181/2015Robotics.git
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
 	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;
 }
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
-	ControlReferenceFrame retFrame;
-	driveRefLock.lock();
-	retFrame = driveReferenceFrame;
-	driveRefLock.unlock();
-	return retFrame;
-}
-
-void ControlScheme::respondToButton(int button){
-	if (button == ABSOLUTE_REFRENCE_FRAME_BUTTON){
-		driveRefLock.lock();
+	if(driveStick->GetRawButton(ABSOLUTE_REFRENCE_FRAME_BUTTON)){
 		driveReferenceFrame = ControlReferenceFrame::Absolute;
-		driveRefLock.unlock();
-	} else  if (button == RELATIVE_REFRENCE_FRAME_BUTTON) {
-		driveRefLock.lock();
+	 }
+	else if(driveStick->GetRawButton(RELATIVE_REFRENCE_FRAME_BUTTON)){
 		driveReferenceFrame = ControlReferenceFrame::Relative;
-		driveRefLock.unlock();
 	}
+		return driveReferenceFrame;
 }

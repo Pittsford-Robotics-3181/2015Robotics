@@ -8,8 +8,6 @@
 #ifndef SRC_CONTROLSCHEME_H_
 #define SRC_CONTROLSCHEME_H_
 #include "WPILib.h"
-#include "ButtonMonitor.h"
-#include <mutex>
 
 enum class ControlReferenceFrame {
 	Absolute,Relative
@@ -17,10 +15,9 @@ enum class ControlReferenceFrame {
 enum class ControlAlignmentMode {
 	Align, Drive
 };
-class ControlScheme: public ButtonResponder {
+class ControlScheme {
 public:
 	ControlScheme(Joystick* drive, Joystick* lift);
-	virtual ~ControlScheme();
 
 	void getDriveControls(double& x, double& y, double&r);
 	void getLiftControls(double& vs);
@@ -32,16 +29,14 @@ public:
 
 private:
 	bool getPerfectControls(double& x, double& y, double& r);
-	bool rotationCompensationEnabledState;
+	bool rotationCompensationEnabledState = true;
 
 	Joystick* driveStick;
 	Joystick* liftStick;
 
 	//Reference Frame Monitor
-	ButtonMonitor* absoluteButtonMonitor;
-	ButtonMonitor* relativeButtonMonitor;
 	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
-	std::mutex driveRefLock;
+
 };
 
 #endif /* SRC_CONTROLSCHEME_H_ */
