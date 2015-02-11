@@ -13,6 +13,7 @@ private:
 	LiftSystem* lift;
 	AlignmentGuide* alignment;
 	Timer* autoTimer;
+	Ultrasonic* sonar;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel m_pdp;
 	USBCamera* cam = new USBCamera ("camera", true);
@@ -54,6 +55,8 @@ private:
 		Ultrasonic* leftUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		alignment = new AlignmentGuide(leftUS,rightUS);
+
+		sonar = new Ultrasonic(5,6);
 
 
      	//Autonomous
@@ -108,6 +111,8 @@ private:
 				SmartDashboard::PutNumber("X", x);
 				SmartDashboard::PutNumber("Y", y);
 				SmartDashboard::PutNumber("R", r);
+
+				SmartDashboard::PutNumber("sonar",sonar->GetRangeInches());
 
 				SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
 				// Get the current going through channel 7, in Amperes.
