@@ -36,6 +36,9 @@ private:
 		Encoder* le = new Encoder((uint32_t)0,(uint32_t)1);
 		DigitalInput *uls = new DigitalInput(3);
 		DigitalInput *lls = new DigitalInput(2);
+		SpeedController* fm = new CANTalon(6);
+		DigitalInput *ufls = new DigitalInput(5);
+		DigitalInput *lfls = new DigitalInput(4);
 		lift = new LiftSystem(lm,le,uls,lls);
 
 		//Control Scheme
@@ -56,7 +59,7 @@ private:
 		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		alignment = new AlignmentGuide(leftUS,rightUS);
 */
-		sonar = new Ultrasonic(5,6);
+		sonar = new Ultrasonic(7,8);
 		sonar->SetAutomaticMode(true);
 
 
@@ -94,7 +97,7 @@ private:
 		case ControlAlignmentMode::Align:
 		///	alignment->enable();
 		//	r = alignment->getRotationSpeed();
-			break;
+		//	break;
 		case ControlAlignmentMode::Drive:
 			//alignment->disable();
 			controls->getDriveControls(x,y,r);
@@ -105,8 +108,9 @@ private:
 		drive->driveRobot(x,y,r,referenceFrame,rotationComp);
 		//Lift
 		double vs=0;
-		controls->getLiftControls(vs);
-		lift->moveLift(vs);
+		bool flapUp=false;
+		controls->getLiftControls(vs,flapUp);
+		lift->moveLift(vs,flapUp);
 
 		//PDP and Carmera
 				SmartDashboard::PutNumber("X", x);

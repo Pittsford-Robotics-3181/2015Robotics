@@ -20,7 +20,7 @@ public:
 	ControlScheme(Joystick* drive, Joystick* lift);
 
 	void getDriveControls(double& x, double& y, double&r);
-	void getLiftControls(double& vs);
+	void getLiftControls(double& vs, bool& flapsUp);
 	bool isRotationCompensationDisabled();
 	ControlReferenceFrame getDriveReferenceFrame();
 	ControlAlignmentMode getAlignmentMode();

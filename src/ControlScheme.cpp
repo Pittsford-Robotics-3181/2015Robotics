@@ -12,6 +12,9 @@ const int RELATIVE_REFRENCE_FRAME_BUTTON = 12;
 const int ENABLE_ROTATION_COMPENSATION_BUTTON = 9;
 const int DISABLE_ROTATION_COMPENSATION_BUTTON = 10;
 
+const int FLAPS_UP_BUTTON = 3;
+const int FLAPS_DOWN_BUTTON = 2;
+
 ControlScheme::ControlScheme(Joystick* drive, Joystick* lift) {
 	driveStick = drive;
 	liftStick = lift;
@@ -59,15 +62,14 @@ bool ControlScheme::getPerfectControls(double& x, double& y, double& r) {
 	return x != 0 || y != 0 || r != 0;
 }
 
-void ControlScheme::getLiftControls(double& vs){
-	if(liftStick->GetRawButton(2)&&liftStick->GetRawButton(3)){
-		vs = 0;
-	} else if(liftStick->GetRawButton(3)){
-		vs = 1;
-	} else if(liftStick->GetRawButton(2)){
-		vs = -1;
-	} else {
-		vs = liftStick->GetY();
+void ControlScheme::getLiftControls(double& vs, bool& flapsUp){
+	vs = liftStick->GetY();
+
+	if(liftStick->GetRawButton(FLAPS_UP_BUTTON)){
+		flapsUp = false;
+	}
+	else if(liftStick->GetRawButton(FLAPS_DOWN_BUTTON)){
+		flapsUp = false;
 	}
 }
 
