@@ -131,6 +131,7 @@ private:
 						SmartDashboard::PutNumber("Y", y);
 						SmartDashboard::PutNumber("R", r);
 
+
 						SmartDashboard::PutNumber("sonar",sonar->GetRangeInches());
 
 						SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
