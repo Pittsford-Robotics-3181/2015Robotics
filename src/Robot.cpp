@@ -38,10 +38,9 @@ private:
 		Encoder* le = new Encoder(Hardware::liftEncoderPort1,Hardware::liftEncoderPort2);
 		DigitalInput *uls = new DigitalInput(Hardware::liftLimitUpper);
 		DigitalInput *lls = new DigitalInput(Hardware::liftLimitLower);
-		SpeedController* fm = new Talon(Hardware::flapMotor);
-		DigitalInput *ufls = new DigitalInput(Hardware::flapLimitUpper);
-		DigitalInput *lfls = new DigitalInput(Hardware::flapLimitLower);
-		lift = new LiftSystem(lm,le,uls,lls,fm,ufls,lfls);
+		Servo* lfs = new Servo(Hardware::leftServo);
+		Servo* rfs = new Servo(Hardware::rightServo);
+		lift = new LiftSystem(lm,le,uls,lls,lfs,rfs);
 
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);

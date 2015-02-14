@@ -7,18 +7,18 @@
 
 #include <LiftSystem.h>
 
-const double flapSpeed = 1.0;
+const float highAngle = 90.0;
+const float lowAngle = 0.0;
 
-LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch,SpeedController* flap,DigitalInput*flapUpper,DigitalInput*flapLower) {
+LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch,Servo* left, Servo* right) {
 	liftMotor = motor;
 	liftEncoder = encoder;
 	liftEncoder->Reset();
 	liftEncoder->SetDistancePerPulse(0);
 	upperLimit = upperSwitch;
 	lowerLimit = lowerSwitch;
-	flapUpperLimit = flapUpper;
-	flapLowerLimit = flapLower;
-	flapMotor = flap;
+	leftFlap = left;
+	rightFlap = right;
 }
 void LiftSystem::moveLift(double vs){
 	stability->stabilizeLiftControls(vs);
@@ -36,16 +36,10 @@ void LiftSystem::moveToHeight(double targetHeight, double speedScale){
 	moveLift(speed);
 }
 void LiftSystem::moveFlapsUp(){
-	if (flapUpperLimit->Get()){
-		flapMotor->Set(0);
-	} else {
-		flapMotor->Set(flapSpeed);
-	}
+	leftFlap->SetAngle(highAngle);
+	rightFlap->SetAngle(highAngle);
 }
 void LiftSystem::moveFlapsDown(){
-	if (flapLowerLimit->Get()){
-		flapMotor->Set(0);
-	} else {
-		flapMotor->Set(-flapSpeed);
-	}
+	leftFlap->SetAngle(lowAngle);
+	rightFlap->SetAngle(lowAngle);
 }
