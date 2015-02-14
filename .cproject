@@ -146,4 +146,5 @@
 			<resource resourceType="PROJECT" workspacePath="/FRC3181_github"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
