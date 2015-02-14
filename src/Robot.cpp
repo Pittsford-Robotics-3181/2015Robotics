@@ -110,7 +110,12 @@ private:
 		double vs=0;
 		bool flapUp=false;
 		controls->getLiftControls(vs,flapUp);
-		lift->moveLift(vs,flapUp);
+		lift->moveLift(vs);
+		if(flapUp) {
+			lift->moveFlapsUp();
+		} else {
+			lift->moveFlapsDown();
+		}
 
 		//PDP and Carmera
 				SmartDashboard::PutNumber("X", x);
