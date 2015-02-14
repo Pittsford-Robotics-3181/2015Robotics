@@ -49,8 +49,6 @@ private:
 		//Stability Monitor
 		StabilityMonitor* stability = new StabilityMonitor();
 		stability->rotationGyro = driveGyro;
-		//stability->rollGyro = new Gyro(1);
-		//stability->pitchGyro = new Gyro(2);
 		drive->stability = stability;
 		lift->stability = stability;
 
