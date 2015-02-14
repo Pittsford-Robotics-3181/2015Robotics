@@ -7,6 +7,7 @@
 
 #include "StabilityMonitor.h"
 #include <math.h>
+#include "Calibration.h"
 
 void JerkLimiter::limitJerk(double& control){
 	double accel = control - prevControl;
@@ -29,14 +30,14 @@ void MotionCompensator::compensateControl(double& control, double sensorVal){
 
 
 StabilityMonitor::StabilityMonitor() {
-	jerkX.maximumAccel = 0.02;
-	jerkY.maximumAccel = 0.02;
-	jerkMag.maximumAccel = 0.02;
-	jerkR.maximumAccel = 0.02;
-	jerkLift.maximumAccel = 0.02;
+	jerkX.maximumAccel = Calibration::MAX_ACCEL_X;
+	jerkY.maximumAccel = Calibration::MAX_ACCEL_Y;
+	jerkMag.maximumAccel = Calibration::MAX_ACCEL_MAG;
+	jerkR.maximumAccel = Calibration::MAX_ACCEL_R;
+	jerkLift.maximumAccel = Calibration::MAX_ACCEL_LIFT;
 
-	rotationComp.controlToSensorRatio = 0.002929;
-	rotationComp.tolerance = 0.05;
+	rotationComp.controlToSensorRatio = Calibration::ROT_COMP_CONTROL_SENSOR_RATIO;
+	rotationComp.tolerance = Calibration::ROT_COMP_TOLERANCE;
 }
 
 StabilityMonitor::~StabilityMonitor() {
@@ -60,7 +61,7 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r,
 //	y += pitchGyro->GetAngle() * 0.0;
 	//Motion Compensation
 	double rot = r;
-	rotationComp.tolerance = 0.05 + fabs(x)/10;
+	rotationComp.tolerance = Calibration::ROT_COMP_TOLERANCE + fabs(x)*Calibration::ROT_COMP_X_TOLERANCE;
 	rotationComp.compensateControl(rot,rotationGyro->GetRate());
 	if(rotationCompensationEnabledState){
 		r = rot;

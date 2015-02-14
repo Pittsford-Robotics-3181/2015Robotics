@@ -3,6 +3,8 @@
 #include "DriveSystem.h"
 #include "LiftSystem.h"
 #include "AlignmentGuide.h"
+#include "Calibration.h"
+#include "Hardware.h"
 
 class Robot: public IterativeRobot
 {
@@ -24,21 +26,21 @@ private:
 	{
 		lw = LiveWindow::GetInstance();
 		//Drive System
-		SpeedController* fl = new CANTalon(1);
-		SpeedController* fr = new CANTalon(2);
-		SpeedController* bl = new CANTalon(4);
-		SpeedController* br = new CANTalon(3);
-		Gyro* driveGyro = new Gyro(0);
+		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
+		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
+		SpeedController* bl = new CANTalon(Hardware::backLeftDriveMotor);
+		SpeedController* br = new CANTalon(Hardware::backRightDriveMotor);
+		Gyro* driveGyro = new Gyro(Hardware::driveRotationGyro);
 		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
 
 		//Lift System
-		SpeedController* lm = new CANTalon(5);
-		Encoder* le = new Encoder((uint32_t)0,(uint32_t)1);
-		DigitalInput *uls = new DigitalInput(3);
-		DigitalInput *lls = new DigitalInput(2);
-		SpeedController* fm = new CANTalon(6);
-		DigitalInput *ufls = new DigitalInput(5);
-		DigitalInput *lfls = new DigitalInput(4);
+		SpeedController* lm = new CANTalon(Hardware::liftMotor);
+		Encoder* le = new Encoder(Hardware::liftEncoderPort1,Hardware::liftEncoderPort2);
+		DigitalInput *uls = new DigitalInput(Hardware::liftLimitUpper);
+		DigitalInput *lls = new DigitalInput(Hardware::liftLimitLower);
+		SpeedController* fm = new Talon(Hardware::flapMotor);
+		DigitalInput *ufls = new DigitalInput(Hardware::flapLimitUpper);
+		DigitalInput *lfls = new DigitalInput(Hardware::flapLimitLower);
 		lift = new LiftSystem(lm,le,uls,lls,fm,ufls,lfls);
 
 		//Control Scheme
@@ -57,7 +59,7 @@ private:
 		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		alignment = new AlignmentGuide(leftUS,rightUS);
 */
-		sonar = new Ultrasonic(7,8);
+		sonar = new Ultrasonic(Hardware::sonarPing,Hardware::sonarEcho);
 		sonar->SetAutomaticMode(true);
 
 
@@ -96,6 +98,11 @@ private:
 		///	alignment->enable();
 		//	r = alignment->getRotationSpeed();
 		//	break;
+		case ControlAlignmentMode::Carry:
+			//alignment->disable();
+			controls->getDriveControls(x,y,r);
+			x = Calibration::CARRY_XPR * r;
+			break;
 		case ControlAlignmentMode::Drive:
 			//alignment->disable();
 			controls->getDriveControls(x,y,r);
@@ -115,28 +122,31 @@ private:
 			lift->moveFlapsDown();
 		}
 
+		printDiagnostics(x,y,r);
+	}
+
+
+	void printDiagnostics(double x, double y, double r){
 		//PDP and Carmera
-				SmartDashboard::PutNumber("X", x);
-				SmartDashboard::PutNumber("Y", y);
-				SmartDashboard::PutNumber("R", r);
+						SmartDashboard::PutNumber("X", x);
+						SmartDashboard::PutNumber("Y", y);
+						SmartDashboard::PutNumber("R", r);
 
-				SmartDashboard::PutNumber("sonar",sonar->GetRangeInches());
+						SmartDashboard::PutNumber("sonar",sonar->GetRangeInches());
 
-				SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
-				// Get the current going through channel 7, in Amperes.
-				// The PDP returns the current in increments of 0.125A.
-				// At low currents the current readings tend to be less accurate.
-				SmartDashboard::PutNumber("Front Left 13", m_pdp.GetCurrent(13));
-				SmartDashboard::PutNumber("Back Left 12", m_pdp.GetCurrent(12));
-				SmartDashboard::PutNumber("Front Right 2", m_pdp.GetCurrent(2));
-				SmartDashboard::PutNumber("Back Right 3", m_pdp.GetCurrent(3));
-				// Get the voltage going into the PDP, in Volts.
-				// The PDP returns the voltage in increments of 0.05 Volts.
-				SmartDashboard::PutNumber("Voltage", m_pdp.GetVoltage());
-				// Retrieves the temperature of the PDP, in degrees Celsius.
-				SmartDashboard::PutNumber("Temperature", m_pdp.GetTemperature());
-
-
+						SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
+						// Get the current going through channel 7, in Amperes.
+						// The PDP returns the current in increments of 0.125A.
+						// At low currents the current readings tend to be less accurate.
+						SmartDashboard::PutNumber("Front Left 13", m_pdp.GetCurrent(13));
+						SmartDashboard::PutNumber("Back Left 12", m_pdp.GetCurrent(12));
+						SmartDashboard::PutNumber("Front Right 2", m_pdp.GetCurrent(2));
+						SmartDashboard::PutNumber("Back Right 3", m_pdp.GetCurrent(3));
+						// Get the voltage going into the PDP, in Volts.
+						// The PDP returns the voltage in increments of 0.05 Volts.
+						SmartDashboard::PutNumber("Voltage", m_pdp.GetVoltage());
+						// Retrieves the temperature of the PDP, in degrees Celsius.
+						SmartDashboard::PutNumber("Temperature", m_pdp.GetTemperature());
 	}
 
 	void TestPeriodic()

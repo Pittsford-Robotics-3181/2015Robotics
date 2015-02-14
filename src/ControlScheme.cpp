@@ -84,7 +84,7 @@ bool ControlScheme::isRotationCompensationDisabled(){
 	//vs *= (1 + liftStick->GetThrottle())/2;
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
-	return liftStick->GetTrigger() ? ControlAlignmentMode::Align : ControlAlignmentMode::Drive;
+	return liftStick->GetTrigger() ? ControlAlignmentMode::Carry : ControlAlignmentMode::Drive;
 }
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame(){
 	if(driveStick->GetRawButton(ABSOLUTE_REFRENCE_FRAME_BUTTON)){
