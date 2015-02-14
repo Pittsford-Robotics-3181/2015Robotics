@@ -39,7 +39,7 @@ private:
 		SpeedController* fm = new CANTalon(6);
 		DigitalInput *ufls = new DigitalInput(5);
 		DigitalInput *lfls = new DigitalInput(4);
-		lift = new LiftSystem(lm,le,uls,lls);
+		lift = new LiftSystem(lm,le,uls,lls,fm,ufls,lfls);
 
 		//Control Scheme
 		Joystick* driveStick = new Joystick(0);
