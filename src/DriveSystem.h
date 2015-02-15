@@ -16,7 +16,7 @@ public:
 	DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro);
 	virtual ~DriveSystem();
 
-	void driveRobot(double x, double y, double r,ControlReferenceFrame frame, bool rotationCompensationEnabledState = false);
+	void driveRobot(double x, double y, double r,ControlReferenceFrame frame, bool rotationCompensationEnabledState = false, bool useWPI = false);
 
 	StabilityMonitor* stability;
 
@@ -26,6 +26,7 @@ private:
 	SpeedController* m_fr;
 	SpeedController* m_bl;
 	SpeedController* m_br;
+	RobotDrive* rd;
 
 
 	//TO BE IMPLEMENTED

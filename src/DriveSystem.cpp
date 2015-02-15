@@ -21,6 +21,11 @@ DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedControll
 	m_br = br;
 	rotationGyro = gyro;
 	rotationGyro->Reset();
+
+	rd = new RobotDrive(fl,fr,bl,br);
+	rd->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+	rd->SetInvertedMotor(RobotDrive::kRearLeftMotor,true);
+	rd->SetSafetyEnabled(false);
 }
 
 DriveSystem::~DriveSystem() {
@@ -28,13 +33,19 @@ DriveSystem::~DriveSystem() {
 }
 
 void DriveSystem::driveRobot(double x, double y, double r,
-		ControlReferenceFrame referenceFrame, bool rotationCompensationEnabledState){
-	if (referenceFrame == ControlReferenceFrame::Absolute){
-		double angle = readGyro();
-		rotateDriveFrame(x,y,r,angle);
+		ControlReferenceFrame referenceFrame, bool rotationCompensationEnabledState,bool useWPI){
+	if(useWPI){
+		rd->MecanumDrive_Cartesian(x,y,r,rotationGyro->GetAngle());
 	}
-	stability->stabilizeDriveControls(x,y,r,true);
-	adjustMotors(x,y,r);
+
+	else{
+		if (referenceFrame == ControlReferenceFrame::Absolute){
+			double angle = readGyro();
+			rotateDriveFrame(x,y,r,angle);
+		}
+		stability->stabilizeDriveControls(x,y,r,true);
+		adjustMotors(x,y,r);
+	}
 }
 
 double DriveSystem::readGyro(){

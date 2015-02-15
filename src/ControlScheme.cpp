@@ -24,7 +24,7 @@ void ControlScheme::getDriveControls(double& x, double& y, double&r){
 	if (!getPerfectControls(x,y,r)){
 		x = driveStick->GetX();
 		y = -driveStick->GetY();
-		r = driveStick->GetTwist();
+		r = -driveStick->GetTwist();
 	}
 	//Deadzone
 	if (fabs(x) < 0.1) x = 0;
@@ -53,9 +53,9 @@ bool ControlScheme::getPerfectControls(double& x, double& y, double& r) {
 		}
 	}
 	if (driveStick->GetRawButton(6)){
-		r = 1;
-	} else if(driveStick->GetRawButton(5)){
 		r = -1;
+	} else if(driveStick->GetRawButton(5)){
+		r = 1;
 	} else {
 		r = 0;
 	}

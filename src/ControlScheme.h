@@ -13,7 +13,7 @@ enum class ControlReferenceFrame {
 	Absolute,Relative
 };
 enum class ControlAlignmentMode {
-	Align, Carry, Drive
+	Align, Carry, Drive, MechWPILIB
 };
 class ControlScheme {
 public:

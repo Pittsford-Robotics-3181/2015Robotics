@@ -19,6 +19,8 @@ const uint32_t liftMotor = 5;
 const uint32_t leftServo = 0;
 const uint32_t rightServo = 1;
 
+const uint32_t powerDistributionChannelLiftMotor = 3;
+
 //SENSORS
 const uint32_t driveRotationGyro = 0;
 
