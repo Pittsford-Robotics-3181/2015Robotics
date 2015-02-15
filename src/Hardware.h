@@ -25,14 +25,17 @@ const uint32_t driveRotationGyro = 0;
 const uint32_t liftEncoderPort1 = 0;
 const uint32_t liftEncoderPort2 = 1;
 
-const uint32_t liftLimitUpper = 3;
-const uint32_t liftLimitLower = 2;
+const uint32_t liftProxUpper = 3;
+const uint32_t liftProxLower = 2;
 
 const uint32_t flapLimitUpper = 5;
 const uint32_t flapLimitLower = 4;
 
-const uint32_t sonarPing = 7;
-const uint32_t sonarEcho = 8;
+const uint32_t sonarPingL = 6;
+const uint32_t sonarEchoL= 7;
+
+const uint32_t sonarPingR = 8;
+const uint32_t sonarEchoR = 9;
 }
 
 #endif /* SRC_HARDWARE_H_ */

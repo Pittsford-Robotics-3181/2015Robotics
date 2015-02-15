@@ -10,19 +10,19 @@
 const float highAngle = 90.0;
 const float lowAngle = 0.0;
 
-LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch,Servo* left, Servo* right) {
+LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperProx,DigitalInput* lowerProx,Servo* left, Servo* right) {
 	liftMotor = motor;
 	liftEncoder = encoder;
 	liftEncoder->Reset();
 	liftEncoder->SetDistancePerPulse(0);
-	upperLimit = upperSwitch;
-	lowerLimit = lowerSwitch;
+	upperLimit = upperProx;
+	lowerLimit = lowerProx;
 	leftFlap = left;
 	rightFlap = right;
 }
 void LiftSystem::moveLift(double vs){
 	stability->stabilizeLiftControls(vs);
-	if (vs > 0 && upperLimit->Get()){
+	if (vs > 0 && !upperLimit->Get()){
 		vs = 0;
 	}
 	if (vs < 0 && lowerLimit->Get()){

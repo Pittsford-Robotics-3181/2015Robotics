@@ -13,18 +13,24 @@ private:
 	DriveSystem* drive;
 	ControlScheme* controls;
 	LiftSystem* lift;
+
+	DigitalInput *lls;
+	DigitalInput *uls;
 	AlignmentGuide* alignment;
 	Timer* autoTimer;
-	Ultrasonic* sonar;
+	Ultrasonic* sonarR;
+	Ultrasonic* sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel m_pdp;
-	USBCamera* cam = new USBCamera ("camera", true);
+	USBCamera* cam = new USBCamera("cam1",0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
 		lw = LiveWindow::GetInstance();
+		CameraServer::GetInstance()->SetQuality(50);
+		CameraServer::GetInstance()->StartAutomaticCapture(std::shared_ptr<USBCamera>(cam));
 		//Drive System
 		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
@@ -36,8 +42,8 @@ private:
 		//Lift System
 		SpeedController* lm = new CANTalon(Hardware::liftMotor);
 		Encoder* le = new Encoder(Hardware::liftEncoderPort1,Hardware::liftEncoderPort2);
-		DigitalInput *uls = new DigitalInput(Hardware::liftLimitUpper);
-		DigitalInput *lls = new DigitalInput(Hardware::liftLimitLower);
+		uls = new DigitalInput(Hardware::liftProxUpper);
+		lls = new DigitalInput(Hardware::liftProxLower);
 		Servo* lfs = new Servo(Hardware::leftServo);
 		Servo* rfs = new Servo(Hardware::rightServo);
 		lift = new LiftSystem(lm,le,uls,lls,lfs,rfs);
@@ -58,9 +64,11 @@ private:
 		Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
 		alignment = new AlignmentGuide(leftUS,rightUS);
 */
-		sonar = new Ultrasonic(Hardware::sonarPing,Hardware::sonarEcho);
-		sonar->SetAutomaticMode(true);
+		sonarR = new Ultrasonic(Hardware::sonarPingR,Hardware::sonarEchoR);
+		sonarR->SetAutomaticMode(true);
 
+		sonarL = new Ultrasonic(Hardware::sonarPingL,Hardware::sonarEchoL);
+		sonarL->SetAutomaticMode(true);
 
      	//Autonomous
      	autoTimer = new Timer();
@@ -132,9 +140,16 @@ private:
 						SmartDashboard::PutNumber("R", r);
 
 
-						SmartDashboard::PutNumber("sonar",sonar->GetRangeInches());
+						SmartDashboard::PutNumber("sonarL",sonarL->GetRangeInches());
+						SmartDashboard::PutNumber("sonarR",sonarR->GetRangeInches());
 
+						if(uls->Get()){
+							SmartDashboard::PutBoolean("Tester",uls->Get());
+						}
 						SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
+						SmartDashboard::PutBoolean("upper limit switch",uls->Get());
+						SmartDashboard::PutBoolean("lower limit switch",lls->Get());
+
 						// Get the current going through channel 7, in Amperes.
 						// The PDP returns the current in increments of 0.125A.
 						// At low currents the current readings tend to be less accurate.
