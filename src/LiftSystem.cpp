@@ -10,8 +10,8 @@
 
 const float highAngle = 90.0;
 const float lowAngle = 0.0;
-const float maxCurrent = 4;
-const float maxCurrentMult = 1.2;
+const float maxCurrent = 50;
+const float maxCurrentMult = 1.3;
 
 LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperProx,DigitalInput* lowerProx,Servo* left, Servo* right, PowerDistributionPanel* pdp) {
 	liftMotor = motor;
@@ -27,29 +27,35 @@ LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upp
 
 }
 double LiftSystem::moveLift(double vs){
-	stability->stabilizeLiftControls(vs);
+	//stability->stabilizeLiftControls(vs);
 	if(!breakDown || vs > 0){
+		breakDown = false;
+		double curr = m_pdp->GetCurrent(Hardware::powerDistributionChannelLiftMotor);
+		shiftAndAdd(curr);
 
-		shiftAndAdd(Hardware::powerDistributionChannelLiftMotor);
+		double adv = ((currents[0]+currents[1]+currents[2])/3.0);
 
-		if(!isCurrentsBroken()){
-			if (vs > 0 && !upperLimit->Get()){
+		if (vs > 0 && !upperLimit->Get()){
+			vs = 0;
+		}
+		if (vs < 0 && !lowerLimit->Get()){
+			vs = 0;
+		}
+
+
+		if(maxCurrent < adv  && vs < 0){
 				vs = 0;
-				breakDown = false;
-			}
-			if (vs < 0 && !lowerLimit->Get()){
-				vs = 0;
-			}
-			liftMotor->Set(vs);
-
-			if(maxCurrent < m_pdp->GetCurrent(Hardware::powerDistributionChannelLiftMotor) && vs < 0){
-					vs = 0;
-					breakDown= true;
-			}
-			return vs;
+				breakDown= true;
 		}
 	}
+	else {
+		vs = 0;
+	}
+
+	liftMotor->Set(vs);
+	return vs;
 }
+
 
 bool LiftSystem::isCurrentsFull(){
 	for(int i = 0; i < 4; i++ ){
@@ -68,7 +74,7 @@ void LiftSystem::shiftAndAdd(double n){
 
 bool LiftSystem::isCurrentsBroken(){
 	if(isCurrentsFull()){
-		if(currents[0] * maxCurrentMult > (currents[1]+currents[2]+currents[3])/3){
+		if(currents[0]  >  maxCurrentMult *(currents[1]+currents[2]+currents[3])/3.0){
 			return true;
 		}
 		return false;

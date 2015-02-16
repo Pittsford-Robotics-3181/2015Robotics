@@ -28,15 +28,15 @@ private:
 	Ultrasonic* sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel* m_pdp;
-	USBCamera* cam = new USBCamera("cam1",0);
+	//USBCamera* cam = new USBCamera("cam1",0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
 		lw = LiveWindow::GetInstance();
-		CameraServer::GetInstance()->SetQuality(50);
-		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		//CameraServer::GetInstance()->SetQuality(50);
+		//CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		//Drive System
 		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
@@ -153,9 +153,6 @@ private:
 						SmartDashboard::PutNumber("sonarL",sonarL->GetRangeInches());
 						SmartDashboard::PutNumber("sonarR",sonarR->GetRangeInches());
 
-						if(uls->Get()){
-							SmartDashboard::PutBoolean("Tester",uls->Get());
-						}
 						SmartDashboard::PutNumber("Lift Motor", m_pdp->GetCurrent(3));
 						SmartDashboard::PutBoolean("upper limit switch",!uls->Get());
 						SmartDashboard::PutBoolean("lower limit switch",!lls->Get());
