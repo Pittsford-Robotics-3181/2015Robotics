@@ -27,16 +27,16 @@ private:
 	Ultrasonic* sonarR;
 	Ultrasonic* sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
-	PowerDistributionPanel* m_pdp;
-	//USBCamera* cam = new USBCamera("cam1",0);
+	PowerDistributionPanel m_pdp;
+	USBCamera* cam = new USBCamera("cam1",0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
 		lw = LiveWindow::GetInstance();
-		//CameraServer::GetInstance()->SetQuality(50);
-		//CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		CameraServer::GetInstance()->SetQuality(50);
+		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		//Drive System
 		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
@@ -80,6 +80,7 @@ private:
      	//Autonomous
      	autoTimer = new Timer();
 
+     	m_pdp.ClearStickyFaults();
 
 	}
 
@@ -153,7 +154,10 @@ private:
 						SmartDashboard::PutNumber("sonarL",sonarL->GetRangeInches());
 						SmartDashboard::PutNumber("sonarR",sonarR->GetRangeInches());
 
-						SmartDashboard::PutNumber("Lift Motor", m_pdp->GetCurrent(3));
+						if(uls->Get()){
+							SmartDashboard::PutBoolean("Tester",uls->Get());
+						}
+						SmartDashboard::PutNumber("Lift Motor", m_pdp.GetCurrent(3));
 						SmartDashboard::PutBoolean("upper limit switch",!uls->Get());
 						SmartDashboard::PutBoolean("lower limit switch",!lls->Get());
 
@@ -161,15 +165,15 @@ private:
 						// Get the current going through channel 7, in Amperes.
 						// The PDP returns the current in increments of 0.125A.
 						// At low currents the current readings tend to be less accurate.
-						SmartDashboard::PutNumber("Front Left 15", m_pdp->GetCurrent(15));
-						SmartDashboard::PutNumber("Front Right 14", m_pdp->GetCurrent(14));
-						SmartDashboard::PutNumber("Back Left 12", m_pdp->GetCurrent(12));
-						SmartDashboard::PutNumber("Back Right 13", m_pdp->GetCurrent(13));
+						SmartDashboard::PutNumber("Front Left 15", m_pdp.GetCurrent(15));
+						SmartDashboard::PutNumber("Front Right 14", m_pdp.GetCurrent(14));
+						SmartDashboard::PutNumber("Back Left 12", m_pdp.GetCurrent(12));
+						SmartDashboard::PutNumber("Back Right 13", m_pdp.GetCurrent(13));
 						// Get the voltage going into the PDP, in Volts.
 						// The PDP returns the voltage in increments of 0.05 Volts.
-						SmartDashboard::PutNumber("Voltage", m_pdp->GetVoltage());
+						SmartDashboard::PutNumber("Voltage", m_pdp.GetVoltage());
 						// Retrieves the temperature of the PDP, in degrees Celsius.
-						SmartDashboard::PutNumber("Temperature", m_pdp->GetTemperature());
+						SmartDashboard::PutNumber("Temperature", m_pdp.GetTemperature());
 	}
 
 	void TestPeriodic()

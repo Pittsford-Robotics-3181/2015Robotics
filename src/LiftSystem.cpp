@@ -13,7 +13,13 @@ const float lowAngle = 0.0;
 const float maxCurrent = 50;
 const float maxCurrentMult = 1.3;
 
-LiftSystem::LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperProx,DigitalInput* lowerProx,Servo* left, Servo* right, PowerDistributionPanel* pdp) {
+LiftSystem::LiftSystem(SpeedController* motor,
+		               Encoder* encoder,
+		               DigitalInput* upperProx,
+					   DigitalInput* lowerProx,
+					   Servo* left,
+					   Servo* right,
+					   PowerDistributionPanel* pdp) {
 	liftMotor = motor;
 	liftEncoder = encoder;
 	liftEncoder->Reset();
