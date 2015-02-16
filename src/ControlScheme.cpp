@@ -66,22 +66,22 @@ void ControlScheme::getLiftControls(double& vs, bool& flapsUp){
 	vs = liftStick->GetY();
 
 	if(liftStick->GetRawButton(FLAPS_UP_BUTTON)){
-		flapsUp = false;
+		flapsUpState = true;
 	}
 	else if(liftStick->GetRawButton(FLAPS_DOWN_BUTTON)){
-		flapsUp = false;
+		flapsUpState = false;
 	}
+	flapsUp = flapsUpState;
 }
 
 bool ControlScheme::isRotationCompensationDisabled(){
 	if(driveStick->GetRawButton(ENABLE_ROTATION_COMPENSATION_BUTTON)){
-		rotationCompensationEnabledState = false;
-	}
-	else if(driveStick->GetRawButton(DISABLE_ROTATION_COMPENSATION_BUTTON)){
 		rotationCompensationEnabledState = true;
 	}
+	else if(driveStick->GetRawButton(DISABLE_ROTATION_COMPENSATION_BUTTON)){
+		rotationCompensationEnabledState = false;
+	}
 	return rotationCompensationEnabledState;
-	//vs *= (1 + liftStick->GetThrottle())/2;
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode(){
 	return liftStick->GetTrigger() ? ControlAlignmentMode::Carry : ControlAlignmentMode::Drive;

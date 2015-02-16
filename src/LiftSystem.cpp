@@ -18,8 +18,7 @@ LiftSystem::LiftSystem(SpeedController* motor,
 		               DigitalInput* upperProx,
 					   DigitalInput* lowerProx,
 					   Servo* left,
-					   Servo* right,
-					   PowerDistributionPanel* pdp) {
+					   Servo* right) {
 	liftMotor = motor;
 	liftEncoder = encoder;
 	liftEncoder->Reset();
@@ -28,64 +27,19 @@ LiftSystem::LiftSystem(SpeedController* motor,
 	lowerLimit = lowerProx;
 	leftFlap = left;
 	rightFlap = right;
-	m_pdp = pdp;
-	breakDown = false;
 
 }
 double LiftSystem::moveLift(double vs){
-	//stability->stabilizeLiftControls(vs);
-	if(!breakDown || vs > 0){
-		breakDown = false;
-		double curr = m_pdp->GetCurrent(Hardware::powerDistributionChannelLiftMotor);
-		shiftAndAdd(curr);
+	stability->stabilizeLiftControls(vs);
 
-		double adv = ((currents[0]+currents[1]+currents[2])/3.0);
-
-		if (vs > 0 && !upperLimit->Get()){
-			vs = 0;
-		}
-		if (vs < 0 && !lowerLimit->Get()){
-			vs = 0;
-		}
-
-
-		if(maxCurrent < adv  && vs < 0){
-				vs = 0;
-				breakDown= true;
-		}
-	}
-	else {
+	if (vs > 0 && !upperLimit->Get()){
 		vs = 0;
 	}
-
+	if (vs < 0 && !lowerLimit->Get()){
+		vs = 0;
+	}
 	liftMotor->Set(vs);
 	return vs;
-}
-
-
-bool LiftSystem::isCurrentsFull(){
-	for(int i = 0; i < 4; i++ ){
-		if(currents[i] == 0){
-			return false;
-		}
-	}
-	return true;
-}
-void LiftSystem::shiftAndAdd(double n){
-	for(int i = 1; i< 4; i++){
-			currents[i] = currents[i-1];
-	}
-	currents[0] = n; //Shifting old values Right
-}
-
-bool LiftSystem::isCurrentsBroken(){
-	if(isCurrentsFull()){
-		if(currents[0]  >  maxCurrentMult *(currents[1]+currents[2]+currents[3])/3.0){
-			return true;
-		}
-		return false;
-	}
-	return false;
 }
 
 

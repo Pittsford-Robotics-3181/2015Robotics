@@ -19,6 +19,10 @@ void JerkLimiter::limitJerk(double& control){
 }
 void MotionCompensator::compensateControl(double& control, double sensorVal){
 	double motionOffset = sensorVal * controlToSensorRatio;
+	SmartDashboard::PutNumber("Sensor Value", motionOffset);
+	SmartDashboard::PutNumber("Control Value", control);
+
+
 	if (fabs(motionOffset) > fabs(control) || control/motionOffset < 0){
 		motionOffset -= prevControl;
 		motionOffset -= tolerance * fabs(motionOffset)/motionOffset;
@@ -56,12 +60,8 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r,
 		x *= fabs(mag/mag0);
 		y *= fabs(mag/mag0);
 	}
-	//Tilt Compensation
-//	x += rollGyro->GetAngle() * 0.0;
-//	y += pitchGyro->GetAngle() * 0.0;
 	//Motion Compensation
 	double rot = r;
-	rotationComp.tolerance = Calibration::ROT_COMP_TOLERANCE + fabs(x)*Calibration::ROT_COMP_X_TOLERANCE;
 	rotationComp.compensateControl(rot,rotationGyro->GetRate());
 	if(rotationCompensationEnabledState){
 		r = rot;

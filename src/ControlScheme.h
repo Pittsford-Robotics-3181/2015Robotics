@@ -13,7 +13,7 @@ enum class ControlReferenceFrame {
 	Absolute,Relative
 };
 enum class ControlAlignmentMode {
-	Align, Carry, Drive, MechWPILIB
+	Align, Carry, Drive
 };
 class ControlScheme {
 public:
@@ -30,6 +30,7 @@ public:
 private:
 	bool getPerfectControls(double& x, double& y, double& r);
 	bool rotationCompensationEnabledState = true;
+	bool flapsUpState = false;
 
 	Joystick* driveStick;
 	Joystick* liftStick;
