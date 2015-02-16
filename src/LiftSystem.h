@@ -9,9 +9,16 @@
 #define SRC_LIFTSYSTEM_H_
 #include <WPILib.h>
 #include "StabilityMonitor.h"
+#include "Hardware.h"
 class LiftSystem {
 public:
-	LiftSystem(SpeedController* motor,Encoder* encoder,DigitalInput* upperSwitch,DigitalInput* lowerSwitch,Servo* left, Servo* right, PowerDistributionPanel* pdp);
+	LiftSystem(SpeedController* motor,
+			   Encoder* encoder,
+			   DigitalInput* upperSwitch,
+			   DigitalInput* lowerSwitch,
+			   Servo* left,
+			   Servo* right,
+			   PowerDistributionPanel* pdp);
 
 	double moveLift(double vs);
 
