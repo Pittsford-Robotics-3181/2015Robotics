@@ -6,6 +6,7 @@
  */
 
 #include <LiftSystem.h>
+#include <Hardware.h>
 
 const float highAngle = 90.0;
 const float lowAngle = 0.0;
