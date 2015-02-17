@@ -4,6 +4,7 @@ before_install:
     - sudo add-apt-repository -y ppa:byteit101/frc-toolchain
     - sudo apt-get update
 install:
-    - sudo apt-get install frc-toolchain
+    - sudo apt-get install frc-toolchain astyle
 script:
     - make
+    - astyle --style=allman --recursive src/*.cpp src/*.h
