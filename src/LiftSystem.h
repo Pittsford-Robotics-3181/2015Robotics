@@ -10,33 +10,30 @@
 #include <WPILib.h>
 #include "StabilityMonitor.h"
 #include "Hardware.h"
-class LiftSystem {
+class LiftSystem
+{
 public:
-	LiftSystem(SpeedController* motor,
-			   Encoder* encoder,
-			   DigitalInput* upperSwitch,
-			   DigitalInput* lowerSwitch,
-			   Servo* left,
-			   Servo* right);
+    LiftSystem(SpeedController* motor, Encoder* encoder,
+               DigitalInput* upperSwitch, DigitalInput* lowerSwitch,
+               Servo* left, Servo* right);
 
-	void moveLift(double vs);
+    void moveLift(double vs);
 
-	void moveToHeight(double height, double speedScale = 1.0);
+    void moveToHeight(double height, double speedScale = 1.0);
 
-	void moveFlapsUp();
-	void moveFlapsDown();
+    void moveFlapsUp();
+    void moveFlapsDown();
 
-	StabilityMonitor* stability;
-	Encoder* liftEncoder;
+    StabilityMonitor* stability;
+    Encoder* liftEncoder;
 
 private:
-	SpeedController* liftMotor;
-	DigitalInput* upperLimit;
-	DigitalInput* lowerLimit;
+    SpeedController* liftMotor;
+    DigitalInput* upperLimit;
+    DigitalInput* lowerLimit;
 
-	Servo* leftFlap;
-	Servo* rightFlap;
-
+    Servo* leftFlap;
+    Servo* rightFlap;
 };
 
 #endif /* SRC_LIFTSYSTEM_H_ */
