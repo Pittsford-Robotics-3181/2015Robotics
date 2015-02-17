@@ -104,7 +104,10 @@ private:
     }
   }
 
-  void TeleopInit() { lift->liftEncoder->Reset(); }
+  void TeleopInit()
+  {
+    lift->liftEncoder->Reset();
+  }
 
   void TeleopPeriodic()
   {
@@ -190,7 +193,10 @@ private:
     SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
   }
 
-  void TestPeriodic() { lw->Run(); }
+  void TestPeriodic()
+  {
+    lw->Run();
+  }
 };
 
 START_ROBOT_CLASS(Robot);

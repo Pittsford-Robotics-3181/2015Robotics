@@ -17,7 +17,10 @@ AlignmentGuide::AlignmentGuide(Ultrasonic *leftSensor, Ultrasonic *rightSensor)
   rs = rightSensor;
   pidLoop = new PIDController(kP, kI, kD, this, this);
 }
-void AlignmentGuide::enable() { pidLoop->Enable(); }
+void AlignmentGuide::enable()
+{
+  pidLoop->Enable();
+}
 void AlignmentGuide::disable()
 {
   pidLoop->Reset();
