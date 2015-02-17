@@ -7,5 +7,5 @@ install:
     - sudo apt-get install frc-toolchain clang-format-3.4
 script:
     - make
-    - clang-format -i src/*.cpp src/*.h
+    - clang-format --style=file -i src/*.cpp src/*.h
     - git diff --exit-code
