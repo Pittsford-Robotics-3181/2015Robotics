@@ -18,7 +18,7 @@
 
   <!-- By default the target is set to 10.TE.AM.2 -->
   <!-- <property name="target" value=""/> -->
-  <property name = "target" value = "10.31.81.102"/>
+  <property name = "target" value = "roboRIO-3181.local"/>
   <property name = "team-number" value = "3181" />
   <property file="${user.home}/wpilib/wpilib.properties"/>
   <property file="build.properties"/>
