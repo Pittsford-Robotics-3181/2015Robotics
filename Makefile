@@ -23,7 +23,7 @@ RMCOMMAND = rm -f
 DEPLOYTARGET = roboRIO-$(TEAM).local
 
 SOURCES = $(wildcard src/*.cpp)
-HEADERS = $(wildcard src/*.hpp)
+HEADERS = $(wildcard src/*.h)
 OBJECTS = $(patsubst src/%.cpp,src/%.o,$(wildcard src/*.cpp))
 
 all: $(OBJECTS)
