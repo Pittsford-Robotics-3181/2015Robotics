@@ -22,9 +22,7 @@ DriveSystem::DriveSystem(SpeedController *fl, SpeedController *fr,
     rd->SetSafetyEnabled(false);
 }
 
-DriveSystem::~DriveSystem()
-{
-}
+DriveSystem::~DriveSystem() {}
 
 void DriveSystem::driveRobot(double x, double y, double r,
                              ControlReferenceFrame referenceFrame,

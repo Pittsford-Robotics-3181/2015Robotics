@@ -47,9 +47,7 @@ StabilityMonitor::StabilityMonitor()
     rotationComp.tolerance = Calibration::ROT_COMP_TOLERANCE;
 }
 
-StabilityMonitor::~StabilityMonitor()
-{
-}
+StabilityMonitor::~StabilityMonitor() {}
 
 void
 StabilityMonitor::stabilizeDriveControls(double &x, double &y, double &r,
