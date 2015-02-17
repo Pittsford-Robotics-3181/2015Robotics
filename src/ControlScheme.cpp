@@ -62,8 +62,31 @@ bool ControlScheme::getPerfectControls(double& x, double& y, double& r) {
 	return x != 0 || y != 0 || r != 0;
 }
 
-void ControlScheme::getLiftControls(double& vs, bool& flapsUp){
+void ControlScheme::getLiftControls(double& vs, double& liftHeight, bool& flapsUp){
 	vs = liftStick->GetY();
+
+	if (liftStick->GetRawButton(6)){
+		presetHeight= 0;
+		}
+		if (liftStick->GetRawButton(7)){
+			presetHeight= 0;
+			}
+		if (liftStick->GetRawButton(9)){
+			presetHeight= 0;
+			}
+		if (liftStick->GetRawButton(0)){
+			presetHeight= 0;
+			}
+		if (liftStick->GetRawButton(10)){
+			presetHeight= 0;
+			}
+		if (liftStick->GetRawButton(11)){
+			presetHeight= 0;
+			}
+		if (fabs(vs)>0.3){
+			presetHeight = -1;
+		}
+		liftHeight = presetHeight;
 
 	if(liftStick->GetRawButton(FLAPS_UP_BUTTON)){
 		flapsUpState = true;
