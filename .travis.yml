@@ -4,6 +4,8 @@ before_install:
     - sudo add-apt-repository -y ppa:byteit101/frc-toolchain
     - sudo apt-get update
 install:
-    - sudo apt-get install frc-toolchain
+    - sudo apt-get install frc-toolchain clang-format-3.4
 script:
     - make
+    - clang-format --style=file -i src/*.cpp src/*.h
+    - git diff --exit-code

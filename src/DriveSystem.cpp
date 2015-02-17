@@ -9,40 +9,35 @@
 #include <math.h>
 #include "StabilityMonitor.h"
 
+DriveSystem::DriveSystem(SpeedController *fl, SpeedController *fr,
+                         SpeedController *bl, SpeedController *br, Gyro *gyro)
+{
 
-DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr, SpeedController* bl, SpeedController* br, Gyro* gyro) {
+  rotationGyro = gyro;
+  rotationGyro->Reset();
 
-	rotationGyro = gyro;
-	rotationGyro->Reset();
-
-	rd = new RobotDrive(fl,fr,bl,br);
-	rd->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-	rd->SetInvertedMotor(RobotDrive::kRearLeftMotor,true);
-	rd->SetSafetyEnabled(false);
+  rd = new RobotDrive(fl, fr, bl, br);
+  rd->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+  rd->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+  rd->SetSafetyEnabled(false);
 }
 
-DriveSystem::~DriveSystem() {
-
+DriveSystem::~DriveSystem()
+{
 }
 
 void DriveSystem::driveRobot(double x, double y, double r,
-		ControlReferenceFrame referenceFrame, bool rotationCompensationEnabledState,bool useWPI){
-	stability->stabilizeDriveControls(x,y,r,rotationCompensationEnabledState);
-	switch (referenceFrame) {
-	case ControlReferenceFrame::Absolute:	rd->MecanumDrive_Cartesian(x,y,r,rotationGyro->GetAngle());break;
-	case ControlReferenceFrame::Relative:	rd->MecanumDrive_Cartesian(x,y,r,0);break;
-	}
+                             ControlReferenceFrame referenceFrame,
+                             bool rotationCompensationEnabledState, bool useWPI)
+{
+  stability->stabilizeDriveControls(x, y, r, rotationCompensationEnabledState);
+  switch (referenceFrame)
+  {
+  case ControlReferenceFrame::Absolute:
+    rd->MecanumDrive_Cartesian(x, y, r, rotationGyro->GetAngle());
+    break;
+  case ControlReferenceFrame::Relative:
+    rd->MecanumDrive_Cartesian(x, y, r, 0);
+    break;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
