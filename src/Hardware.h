@@ -30,8 +30,6 @@ const uint32_t liftEncoderPort2 = 1;
 const uint32_t liftProxUpper = 3;
 const uint32_t liftProxLower = 2;
 
-const uint32_t flapLimitUpper = 5;
-const uint32_t flapLimitLower = 4;
 
 const uint32_t sonarPingL = 6;
 const uint32_t sonarEchoL= 7;

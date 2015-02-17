@@ -19,7 +19,7 @@ public:
 			   Servo* left,
 			   Servo* right);
 
-	double moveLift(double vs);
+	void moveLift(double vs);
 
 	void moveToHeight(double height, double speedScale = 1.0);
 
@@ -27,10 +27,10 @@ public:
 	void moveFlapsDown();
 
 	StabilityMonitor* stability;
+	Encoder* liftEncoder;
 
 private:
 	SpeedController* liftMotor;
-	Encoder* liftEncoder;
 	DigitalInput* upperLimit;
 	DigitalInput* lowerLimit;
 

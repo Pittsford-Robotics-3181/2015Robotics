@@ -92,6 +92,7 @@ private:
 
 	void AutonomousPeriodic()
 	{
+		lift->moveLift(-0.5);
 		if(autoTimer->Get() > 5) {
 			autoTimer->Stop();
 			//drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute);
@@ -102,7 +103,7 @@ private:
 
 	void TeleopInit()
 	{
-
+		lift->liftEncoder->Reset();
 	}
 
 	void TeleopPeriodic()
@@ -129,17 +130,22 @@ private:
 		drive->driveRobot(x,y,r,referenceFrame,rotationComp,true);
 
 		//Lift
-		double vs=0;
+		double vs=0,liftHeight = 0;
 		bool flapUp=false;
-		controls->getLiftControls(vs,flapUp);
-		liftValue= lift->moveLift(vs);
+		controls->getLiftControls(vs,liftHeight,flapUp);
+		liftValue=vs;
+		if(liftHeight >= 0) {
+			lift->moveToHeight(liftHeight);
+		} else {
+			lift->moveLift(vs);
+		}
 		if(flapUp) {
 			lift->moveFlapsUp();
 		} else {
 			lift->moveFlapsDown();
 		}
 
-		printDiagnostics(0,0,0);//x,y,r);
+		printDiagnostics(x,y,r);
 
 	}
 

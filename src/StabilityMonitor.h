@@ -37,6 +37,7 @@ public:
 private:
 	JerkLimiter jerkX, jerkY, jerkMag, jerkR, jerkLift;
 	MotionCompensator rotationComp;
+	int liftTime = 0;
 };
 
 #endif /* SRC_STABILITYMONITOR_H_ */

@@ -29,7 +29,7 @@ LiftSystem::LiftSystem(SpeedController* motor,
 	rightFlap = right;
 
 }
-double LiftSystem::moveLift(double vs){
+void LiftSystem::moveLift(double vs){
 	stability->stabilizeLiftControls(vs);
 
 	if (vs > 0 && !upperLimit->Get()){
@@ -39,7 +39,6 @@ double LiftSystem::moveLift(double vs){
 		vs = 0;
 	}
 	liftMotor->Set(vs);
-	return vs;
 }
 
 
@@ -49,10 +48,10 @@ void LiftSystem::moveToHeight(double targetHeight, double speedScale){
 	moveLift(speed);
 }
 void LiftSystem::moveFlapsUp(){
-	leftFlap->SetAngle(highAngle);
+	leftFlap->SetAngle(lowAngle);
 	rightFlap->SetAngle(highAngle);
 }
 void LiftSystem::moveFlapsDown(){
-	leftFlap->SetAngle(lowAngle);
+	leftFlap->SetAngle(highAngle);
 	rightFlap->SetAngle(lowAngle);
 }

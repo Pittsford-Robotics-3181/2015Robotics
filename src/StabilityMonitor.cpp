@@ -22,7 +22,6 @@ void MotionCompensator::compensateControl(double& control, double sensorVal){
 	SmartDashboard::PutNumber("Sensor Value", motionOffset);
 	SmartDashboard::PutNumber("Control Value", control);
 
-
 	if (fabs(motionOffset) > fabs(control) || control/motionOffset < 0){
 		motionOffset -= prevControl;
 		motionOffset -= tolerance * fabs(motionOffset)/motionOffset;
@@ -69,5 +68,6 @@ void StabilityMonitor::stabilizeDriveControls(double& x, double& y, double&r,
 }
 void StabilityMonitor::stabilizeLiftControls(double& vs){
 	jerkLift.limitJerk(vs);
+	vs *= (0.8 + 0.2 * cos(++liftTime/4));
 }
 
