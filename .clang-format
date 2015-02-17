@@ -23,7 +23,6 @@ IndentCaseLabels: false
 IndentWrappedFunctionNames: false
 IndentFunctionDeclarationAfterType: false
 MaxEmptyLinesToKeep: 1
-KeepEmptyLinesAtTheStartOfBlocks: true
 NamespaceIndentation: All
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
