@@ -13,9 +13,9 @@
 class LiftSystem
 {
 public:
-    LiftSystem(SpeedController* motor, Encoder* encoder,
-               DigitalInput* upperSwitch, DigitalInput* lowerSwitch,
-               Servo* left, Servo* right);
+    LiftSystem(SpeedController *motor, Encoder *encoder,
+               DigitalInput *upperSwitch, DigitalInput *lowerSwitch,
+               Servo *left, Servo *right);
 
     void moveLift(double vs);
 
@@ -24,16 +24,16 @@ public:
     void moveFlapsUp();
     void moveFlapsDown();
 
-    StabilityMonitor* stability;
-    Encoder* liftEncoder;
+    StabilityMonitor *stability;
+    Encoder *liftEncoder;
 
 private:
-    SpeedController* liftMotor;
-    DigitalInput* upperLimit;
-    DigitalInput* lowerLimit;
+    SpeedController *liftMotor;
+    DigitalInput *upperLimit;
+    DigitalInput *lowerLimit;
 
-    Servo* leftFlap;
-    Servo* rightFlap;
+    Servo *leftFlap;
+    Servo *rightFlap;
 };
 
 #endif /* SRC_LIFTSYSTEM_H_ */

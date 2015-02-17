@@ -23,22 +23,22 @@ enum class ControlAlignmentMode
 class ControlScheme
 {
 public:
-    ControlScheme(Joystick* drive, Joystick* lift);
+    ControlScheme(Joystick *drive, Joystick *lift);
 
-    void getDriveControls(double& x, double& y, double& r);
-    void getLiftControls(double& vs, double& liftHeight, bool& flapsUp);
+    void getDriveControls(double &x, double &y, double &r);
+    void getLiftControls(double &vs, double &liftHeight, bool &flapsUp);
     bool isRotationCompensationDisabled();
     ControlReferenceFrame getDriveReferenceFrame();
     ControlAlignmentMode getAlignmentMode();
 
 private:
-    bool getPerfectControls(double& x, double& y, double& r);
+    bool getPerfectControls(double &x, double &y, double &r);
     bool rotationCompensationEnabledState = true;
     bool flapsUpState = false;
     double presetHeight = -1;
 
-    Joystick* driveStick;
-    Joystick* liftStick;
+    Joystick *driveStick;
+    Joystick *liftStick;
 
     // Reference Frame Monitor
     ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;

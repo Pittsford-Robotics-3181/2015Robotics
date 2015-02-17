@@ -9,8 +9,8 @@
 #include <math.h>
 #include "StabilityMonitor.h"
 
-DriveSystem::DriveSystem(SpeedController* fl, SpeedController* fr,
-                         SpeedController* bl, SpeedController* br, Gyro* gyro)
+DriveSystem::DriveSystem(SpeedController *fl, SpeedController *fr,
+                         SpeedController *bl, SpeedController *br, Gyro *gyro)
 {
 
     rotationGyro = gyro;

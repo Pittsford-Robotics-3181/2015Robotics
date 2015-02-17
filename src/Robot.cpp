@@ -9,26 +9,26 @@
 class Robot : public IterativeRobot
 {
 private:
-    LiveWindow* lw;
-    DriveSystem* drive;
-    ControlScheme* controls;
-    LiftSystem* lift;
+    LiveWindow *lw;
+    DriveSystem *drive;
+    ControlScheme *controls;
+    LiftSystem *lift;
 
-    Joystick* driveStick;
-    Joystick* liftStick;
+    Joystick *driveStick;
+    Joystick *liftStick;
 
-    Gyro* driveGyro;
+    Gyro *driveGyro;
 
-    DigitalInput* lls;
-    DigitalInput* uls;
-    AlignmentGuide* alignment;
-    Timer* autoTimer;
+    DigitalInput *lls;
+    DigitalInput *uls;
+    AlignmentGuide *alignment;
+    Timer *autoTimer;
     double liftValue = 0;
-    Ultrasonic* sonarR;
-    Ultrasonic* sonarL;
+    Ultrasonic *sonarR;
+    Ultrasonic *sonarL;
     // Object for dealing with the Power Distribution Panel (PDP).
-    PowerDistributionPanel* m_pdp;
-    USBCamera* cam = new USBCamera("cam0", 0);
+    PowerDistributionPanel *m_pdp;
+    USBCamera *cam = new USBCamera("cam0", 0);
     // Update every 5milliseconds/0.005 seconds.
     const double kUpdatePeriod = 0.005;
 
@@ -39,21 +39,21 @@ private:
         CameraServer::GetInstance()->SetQuality(50);
         CameraServer::GetInstance()->StartAutomaticCapture("cam1");
         // Drive System
-        SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
-        SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
-        SpeedController* bl = new CANTalon(Hardware::backLeftDriveMotor);
-        SpeedController* br = new CANTalon(Hardware::backRightDriveMotor);
+        SpeedController *fl = new CANTalon(Hardware::frontLeftDriveMotor);
+        SpeedController *fr = new CANTalon(Hardware::frontRightDriveMotor);
+        SpeedController *bl = new CANTalon(Hardware::backLeftDriveMotor);
+        SpeedController *br = new CANTalon(Hardware::backRightDriveMotor);
         driveGyro = new Gyro(Hardware::driveRotationGyro);
         drive = new DriveSystem(fl, fr, bl, br, driveGyro);
 
         // Lift System
-        SpeedController* lm = new CANTalon(Hardware::liftMotor);
-        Encoder* le =
+        SpeedController *lm = new CANTalon(Hardware::liftMotor);
+        Encoder *le =
             new Encoder(Hardware::liftEncoderPort1, Hardware::liftEncoderPort2);
         uls = new DigitalInput(Hardware::liftProxUpper);
         lls = new DigitalInput(Hardware::liftProxLower);
-        Servo* lfs = new Servo(Hardware::leftServo);
-        Servo* rfs = new Servo(Hardware::rightServo);
+        Servo *lfs = new Servo(Hardware::leftServo);
+        Servo *rfs = new Servo(Hardware::rightServo);
         lift = new LiftSystem(lm, le, uls, lls, lfs, rfs);
 
         // Control Scheme
@@ -62,7 +62,7 @@ private:
         controls = new ControlScheme(driveStick, liftStick);
 
         // Stability Monitor
-        StabilityMonitor* stability = new StabilityMonitor();
+        StabilityMonitor *stability = new StabilityMonitor();
         stability->rotationGyro = driveGyro;
         drive->stability = stability;
         lift->stability = stability;

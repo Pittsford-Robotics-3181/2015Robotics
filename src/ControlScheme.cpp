@@ -15,13 +15,13 @@ const int DISABLE_ROTATION_COMPENSATION_BUTTON = 10;
 const int FLAPS_UP_BUTTON = 3;
 const int FLAPS_DOWN_BUTTON = 2;
 
-ControlScheme::ControlScheme(Joystick* drive, Joystick* lift)
+ControlScheme::ControlScheme(Joystick *drive, Joystick *lift)
 {
     driveStick = drive;
     liftStick = lift;
 }
 
-void ControlScheme::getDriveControls(double& x, double& y, double& r)
+void ControlScheme::getDriveControls(double &x, double &y, double &r)
 {
     if (!getPerfectControls(x, y, r))
     {
@@ -44,7 +44,7 @@ void ControlScheme::getDriveControls(double& x, double& y, double& r)
     r *= throttle;
 }
 
-bool ControlScheme::getPerfectControls(double& x, double& y, double& r)
+bool ControlScheme::getPerfectControls(double &x, double &y, double &r)
 {
     int hat = driveStick->GetPOV();
     if (hat >= 0)
@@ -81,8 +81,8 @@ bool ControlScheme::getPerfectControls(double& x, double& y, double& r)
     return x != 0 || y != 0 || r != 0;
 }
 
-void ControlScheme::getLiftControls(double& vs, double& liftHeight,
-                                    bool& flapsUp)
+void ControlScheme::getLiftControls(double &vs, double &liftHeight,
+                                    bool &flapsUp)
 {
     vs = liftStick->GetY();
 

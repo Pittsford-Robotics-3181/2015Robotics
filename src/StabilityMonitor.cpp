@@ -9,7 +9,7 @@
 #include <math.h>
 #include "Calibration.h"
 
-void JerkLimiter::limitJerk(double& control)
+void JerkLimiter::limitJerk(double &control)
 {
     double accel = control - prevControl;
     if (fabs(accel) > maximumAccel)
@@ -19,7 +19,7 @@ void JerkLimiter::limitJerk(double& control)
     }
     prevControl = control;
 }
-void MotionCompensator::compensateControl(double& control, double sensorVal)
+void MotionCompensator::compensateControl(double &control, double sensorVal)
 {
     double motionOffset = sensorVal * controlToSensorRatio;
     SmartDashboard::PutNumber("Sensor Value", motionOffset);
@@ -52,7 +52,7 @@ StabilityMonitor::~StabilityMonitor()
 }
 
 void
-StabilityMonitor::stabilizeDriveControls(double& x, double& y, double& r,
+StabilityMonitor::stabilizeDriveControls(double &x, double &y, double &r,
                                          bool rotationCompensationEnabledState)
 {
     // Limit Jerk
@@ -75,7 +75,7 @@ StabilityMonitor::stabilizeDriveControls(double& x, double& y, double& r,
         r = rot;
     }
 }
-void StabilityMonitor::stabilizeLiftControls(double& vs)
+void StabilityMonitor::stabilizeLiftControls(double &vs)
 {
     jerkLift.limitJerk(vs);
     vs *= (0.8 + 0.2 * cos(++liftTime / 4));

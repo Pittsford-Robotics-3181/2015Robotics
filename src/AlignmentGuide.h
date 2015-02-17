@@ -12,7 +12,7 @@
 class AlignmentGuide : public PIDSource, public PIDOutput
 {
 public:
-    AlignmentGuide(Ultrasonic* leftSensor, Ultrasonic* rightSensor);
+    AlignmentGuide(Ultrasonic *leftSensor, Ultrasonic *rightSensor);
 
     void enable();
     void disable();
@@ -22,9 +22,9 @@ public:
     virtual void PIDWrite(float output);
 
 private:
-    Ultrasonic* ls, *rs;
+    Ultrasonic *ls, *rs;
     double rotationSpeed = 0.0;
-    PIDController* pidLoop;
+    PIDController *pidLoop;
     std::mutex adjustmentLock;
 };
 
