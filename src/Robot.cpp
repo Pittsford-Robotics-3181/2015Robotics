@@ -28,17 +28,16 @@ private:
 	Ultrasonic* sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel* m_pdp;
+	USBCamera* cam = new USBCamera("cam0",0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
+		m_pdp=new PowerDistributionPanel();
 		lw = LiveWindow::GetInstance();
 		CameraServer::GetInstance()->SetQuality(50);
-		CameraServer::GetInstance()->StartAutomaticCapture("cam0");
-
-		m_pdp = new PowerDistributionPanel();
-
+		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		//Drive System
 		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
@@ -55,7 +54,7 @@ private:
 		lls = new DigitalInput(Hardware::liftProxLower);
 		Servo* lfs = new Servo(Hardware::leftServo);
 		Servo* rfs = new Servo(Hardware::rightServo);
-		lift = new LiftSystem(lm,le,uls,lls,lfs,rfs,m_pdp);
+		lift = new LiftSystem(lm,le,uls,lls,lfs,rfs);
 
 		//Control Scheme
 		driveStick = new Joystick(0);
@@ -64,8 +63,8 @@ private:
 
 		//Stability Monitor
 		StabilityMonitor* stability = new StabilityMonitor();
-		//stability->rotationGyro = driveGyro;
-		//drive->stability = stability;
+		stability->rotationGyro = driveGyro;
+		drive->stability = stability;
 		lift->stability = stability;
 
 	/*	//Alignment Guide
@@ -83,7 +82,6 @@ private:
      	autoTimer = new Timer();
 
      	m_pdp->ClearStickyFaults();
-
 	}
 
 	void AutonomousInit()
@@ -125,7 +123,6 @@ private:
 			//alignment->disable();
 			controls->getDriveControls(x,y,r);
 			break;
-
 		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		bool rotationComp = controls->isRotationCompensationDisabled();
@@ -142,12 +139,13 @@ private:
 			lift->moveFlapsDown();
 		}
 
-		printDiagnostics(x,y,r);
+		printDiagnostics(0,0,0);//x,y,r);
+
 	}
 
 
 	void printDiagnostics(double x, double y, double r){
-		//PDP and Camera
+		//PDP and Carmera
 						SmartDashboard::PutNumber("X", x);
 						SmartDashboard::PutNumber("Y", y);
 						SmartDashboard::PutNumber("R", r);
@@ -176,6 +174,9 @@ private:
 						SmartDashboard::PutNumber("Voltage", m_pdp->GetVoltage());
 						// Retrieves the temperature of the PDP, in degrees Celsius.
 						SmartDashboard::PutNumber("Temperature", m_pdp->GetTemperature());
+
+						SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
+
 	}
 
 	void TestPeriodic()
