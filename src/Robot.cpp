@@ -19,42 +19,42 @@ private:
 
 	Gyro* driveGyro;
 
-	DigitalInput *lls;
-	DigitalInput *uls;
+	DigitalInput *lowerLimitSwitch;
+	DigitalInput *upperLimitSwitch;
 	AlignmentGuide* alignment;
 	Timer* autoTimer;
 	double liftValue =0;
 	Ultrasonic* sonarR;
 	Ultrasonic* sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
-	PowerDistributionPanel* m_pdp;
-	USBCamera* cam = new USBCamera("cam0",0);
+	PowerDistributionPanel* powerDistributionPanel;
+	USBCamera* cam = new USBCamera("cam0",1);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
-		m_pdp=new PowerDistributionPanel();
+		powerDistributionPanel=new PowerDistributionPanel();
 		lw = LiveWindow::GetInstance();
 		CameraServer::GetInstance()->SetQuality(50);
-		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		CameraServer::GetInstance()->StartAutomaticCapture(std::shared_ptr<USBCamera>(cam));
 		//Drive System
-		SpeedController* fl = new CANTalon(Hardware::frontLeftDriveMotor);
-		SpeedController* fr = new CANTalon(Hardware::frontRightDriveMotor);
-		SpeedController* bl = new CANTalon(Hardware::backLeftDriveMotor);
-		SpeedController* br = new CANTalon(Hardware::backRightDriveMotor);
+		SpeedController* frontLeftTalon = new CANTalon(Hardware::frontLeftDriveMotor);
+		SpeedController* frontRightTalon = new CANTalon(Hardware::frontRightDriveMotor);
+		SpeedController* backRightTalon = new CANTalon(Hardware::backLeftDriveMotor);
+		SpeedController* backLeftTalon = new CANTalon(Hardware::backRightDriveMotor);
 		driveGyro = new Gyro(Hardware::driveRotationGyro);
-		drive = new DriveSystem(fl,fr,bl,br,driveGyro);
+		drive = new DriveSystem(frontLeftTalon,frontRightTalon,backRightTalon,backLeftTalon,driveGyro);
 
 
 		//Lift System
-		SpeedController* lm = new CANTalon(Hardware::liftMotor);
-		Encoder* le = new Encoder(Hardware::liftEncoderPort1,Hardware::liftEncoderPort2);
-		uls = new DigitalInput(Hardware::liftProxUpper);
-		lls = new DigitalInput(Hardware::liftProxLower);
-		Servo* lfs = new Servo(Hardware::leftServo);
-		Servo* rfs = new Servo(Hardware::rightServo);
-		lift = new LiftSystem(lm,le,uls,lls,lfs,rfs);
+		SpeedController* liftTalon = new CANTalon(Hardware::liftMotor);
+		Encoder* liftEncoder = new Encoder(Hardware::liftEncoderPort1,Hardware::liftEncoderPort2);
+		upperLimitSwitch = new DigitalInput(Hardware::liftProxUpper);
+		lowerLimitSwitch = new DigitalInput(Hardware::liftProxLower);
+		Servo* leftFlipperServo = new Servo(Hardware::leftServo);
+		Servo* rightFlipperServo = new Servo(Hardware::rightServo);
+		lift = new LiftSystem(liftTalon,liftEncoder,upperLimitSwitch,lowerLimitSwitch,leftFlipperServo,rightFlipperServo);
 
 		//Control Scheme
 		driveStick = new Joystick(0);
@@ -81,7 +81,7 @@ private:
      	//Autonomous
      	autoTimer = new Timer();
 
-     	m_pdp->ClearStickyFaults();
+     	powerDistributionPanel->ClearStickyFaults();
 	}
 
 	void AutonomousInit()
@@ -160,26 +160,26 @@ private:
 						SmartDashboard::PutNumber("sonarL",sonarL->GetRangeInches());
 						SmartDashboard::PutNumber("sonarR",sonarR->GetRangeInches());
 
-						if(uls->Get()){
-							SmartDashboard::PutBoolean("Tester",uls->Get());
+						if(upperLimitSwitch->Get()){
+							SmartDashboard::PutBoolean("Tester",upperLimitSwitch->Get());
 						}
-						SmartDashboard::PutNumber("Lift Motor", m_pdp->GetCurrent(3));
-						SmartDashboard::PutBoolean("upper limit switch",!uls->Get());
-						SmartDashboard::PutBoolean("lower limit switch",!lls->Get());
+						SmartDashboard::PutNumber("Lift Motor", powerDistributionPanel->GetCurrent(3));
+						SmartDashboard::PutBoolean("upper limit switch",!upperLimitSwitch->Get());
+						SmartDashboard::PutBoolean("lower limit switch",!lowerLimitSwitch->Get());
 
 						SmartDashboard::PutNumber("liftValue",liftValue);
 						// Get the current going through channel 7, in Amperes.
 						// The PDP returns the current in increments of 0.125A.
 						// At low currents the current readings tend to be less accurate.
-						SmartDashboard::PutNumber("Front Left 15", m_pdp->GetCurrent(15));
-						SmartDashboard::PutNumber("Front Right 14", m_pdp->GetCurrent(14));
-						SmartDashboard::PutNumber("Back Left 12", m_pdp->GetCurrent(12));
-						SmartDashboard::PutNumber("Back Right 13", m_pdp->GetCurrent(13));
+						SmartDashboard::PutNumber("Front Left 15", powerDistributionPanel->GetCurrent(15));
+						SmartDashboard::PutNumber("Front Right 14", powerDistributionPanel->GetCurrent(14));
+						SmartDashboard::PutNumber("Back Left 12", powerDistributionPanel->GetCurrent(12));
+						SmartDashboard::PutNumber("Back Right 13", powerDistributionPanel->GetCurrent(13));
 						// Get the voltage going into the PDP, in Volts.
 						// The PDP returns the voltage in increments of 0.05 Volts.
-						SmartDashboard::PutNumber("Voltage", m_pdp->GetVoltage());
+						SmartDashboard::PutNumber("Voltage", powerDistributionPanel->GetVoltage());
 						// Retrieves the temperature of the PDP, in degrees Celsius.
-						SmartDashboard::PutNumber("Temperature", m_pdp->GetTemperature());
+						SmartDashboard::PutNumber("Temperature", powerDistributionPanel->GetTemperature());
 
 						SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
 
