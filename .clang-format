@@ -39,6 +39,5 @@ SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 SpaceBeforeAssignmentOperators: true
 ContinuationIndentWidth: 4
-CommentPragmas:  '^ IWYU pragma:'
 ...
 
