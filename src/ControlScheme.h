@@ -1,8 +1,8 @@
 /*
  * ControlScheme.h
  *
- *  Created on: Jan 15, 2015
- *      Author: robbiemarkwick
+ *	Created on: Jan 15, 2015
+ *			Author: robbiemarkwick
  */
 
 #ifndef SRC_CONTROLSCHEME_H_
@@ -11,37 +11,37 @@
 
 enum class ControlReferenceFrame
 {
-  Absolute,
-  Relative
+	Absolute,
+	Relative
 };
 enum class ControlAlignmentMode
 {
-  Align,
-  Carry,
-  Drive
+	Align,
+	Carry,
+	Drive
 };
 class ControlScheme
 {
 public:
-  ControlScheme(Joystick *drive, Joystick *lift);
+	ControlScheme(Joystick *drive, Joystick *lift);
 
-  void getDriveControls(double &x, double &y, double &r);
-  void getLiftControls(double &vs, double &liftHeight, bool &flapsUp);
-  bool isRotationCompensationDisabled();
-  ControlReferenceFrame getDriveReferenceFrame();
-  ControlAlignmentMode getAlignmentMode();
+	void getDriveControls(double &x, double &y, double &r);
+	void getLiftControls(double &vs, double &liftHeight, bool &flapsUp);
+	bool isRotationCompensationDisabled();
+	ControlReferenceFrame getDriveReferenceFrame();
+	ControlAlignmentMode getAlignmentMode();
 
 private:
-  bool getPerfectControls(double &x, double &y, double &r);
-  bool rotationCompensationEnabledState = true;
-  bool flapsUpState = false;
-  double presetHeight = -1;
+	bool getPerfectControls(double &x, double &y, double &r);
+	bool rotationCompensationEnabledState = true;
+	bool flapsUpState = false;
+	double presetHeight = -1;
 
-  Joystick *driveStick;
-  Joystick *liftStick;
+	Joystick *driveStick;
+	Joystick *liftStick;
 
-  // Reference Frame Monitor
-  ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
+	// Reference Frame Monitor
+	ControlReferenceFrame driveReferenceFrame = ControlReferenceFrame::Absolute;
 };
 
 #endif /* SRC_CONTROLSCHEME_H_ */

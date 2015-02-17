@@ -1,8 +1,8 @@
 /*
  * AlignmentSystem.h
  *
- *  Created on: Feb 3, 2015
- *      Author: robbiemarkwick
+ *	Created on: Feb 3, 2015
+ *			Author: robbiemarkwick
  */
 
 #ifndef SRC_ALIGNMENTGUIDE_H_
@@ -12,20 +12,20 @@
 class AlignmentGuide : public PIDSource, public PIDOutput
 {
 public:
-  AlignmentGuide(Ultrasonic *leftSensor, Ultrasonic *rightSensor);
+	AlignmentGuide(Ultrasonic *leftSensor, Ultrasonic *rightSensor);
 
-  void enable();
-  void disable();
+	void enable();
+	void disable();
 
-  double getRotationSpeed();
-  virtual double PIDGet();
-  virtual void PIDWrite(float output);
+	double getRotationSpeed();
+	virtual double PIDGet();
+	virtual void PIDWrite(float output);
 
 private:
-  Ultrasonic *ls, *rs;
-  double rotationSpeed = 0.0;
-  PIDController *pidLoop;
-  std::mutex adjustmentLock;
+	Ultrasonic *ls, *rs;
+	double rotationSpeed = 0.0;
+	PIDController *pidLoop;
+	std::mutex adjustmentLock;
 };
 
 #endif /* SRC_ALIGNMENTGUIDE_H_ */

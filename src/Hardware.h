@@ -1,8 +1,8 @@
 /*
  * Hardware.h
  *
- *  Created on: Feb 14, 2015
- *      Author: robbiemarkwick
+ *Created on: Feb 14, 2015
+ *Author: robbiemarkwick
  */
 
 #ifndef SRC_HARDWARE_H_
