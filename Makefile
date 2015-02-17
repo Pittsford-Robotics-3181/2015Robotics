@@ -14,7 +14,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AT = @
-INCDIR = -I$(HOME)/wpilib/cpp/current/include
+INCDIR = -I$(HOME)/wpilib/cpp/current/include -Isrc/
 CPPFLAGS += -g -Wall -W $(INCDIR) -std=c++14 -fPIC
 LFLAGS = -L$(HOME)/wpilib/cpp/current/lib -lwpi
 CXX = arm-frc-linux-gnueabi-g++
