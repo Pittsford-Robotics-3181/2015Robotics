@@ -9,3 +9,4 @@ script:
     - make
     - clang-format --style=file -i src/*.cpp src/*.h
     - git diff --exit-code
+    - clang-format --style=llvm -dump-config
