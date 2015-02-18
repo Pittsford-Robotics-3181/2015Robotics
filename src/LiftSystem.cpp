@@ -19,8 +19,7 @@ LiftSystem::LiftSystem(SpeedController *motor, Encoder *encoder,
 {
 	liftMotor = motor;
 	liftEncoder = encoder;
-	liftEncoder->Reset();
-	liftEncoder->SetDistancePerPulse(0);
+	liftEncoder->SetDistancePerPulse(2.0);
 	upperLimit = upperProx;
 	lowerLimit = lowerProx;
 	leftFlap = left;
@@ -39,6 +38,7 @@ void LiftSystem::moveLift(double vs)
 		vs = 0;
 	}
 	liftMotor->Set(vs);
+	SmartDashboard::PutNumber("Lift Height", liftEncoder->GetDistance());
 }
 
 void LiftSystem::moveToHeight(double targetHeight, double speedScale)
