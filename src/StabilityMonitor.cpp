@@ -78,5 +78,5 @@ StabilityMonitor::stabilizeDriveControls(double &x, double &y, double &r,
 void StabilityMonitor::stabilizeLiftControls(double &vs)
 {
 	jerkLift.limitJerk(vs);
-	vs *= (0.8 + 0.2 * cos(++liftTime / 4));
+	vs *= (0.95 + 0.05 * cos(++liftTime / 2));
 }

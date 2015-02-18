@@ -96,11 +96,11 @@ private:
 		if (autoTimer->Get() > 5)
 		{
 			autoTimer->Stop();
-			// drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute);
+			drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute,true);
 		}
 		else
 		{
-			// drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute);
+			drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute,true);
 		}
 	}
 
