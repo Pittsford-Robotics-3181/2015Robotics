@@ -33,7 +33,7 @@ public:
 
 private:
 	bool getPerfectControls(double &x, double &y, double &r);
-	bool rotationCompensationEnabledState = true;
+	bool rotationCompensationEnabledState = false;
 	bool flapsUpState = false;
 	double presetHeight = -1;
 

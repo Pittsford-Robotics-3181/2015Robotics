@@ -44,3 +44,9 @@ double AlignmentGuide::getRotationSpeed()
 	adjustmentLock.unlock();
 	return ret;
 }
+void AlignmentGuide::setAutomaticSensors(bool value)
+{
+	rs->SetAutomaticMode(value);
+	ls->SetAutomaticMode(value);
+}
+

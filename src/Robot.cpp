@@ -13,6 +13,7 @@ private:
 	DriveSystem *drive;
 	ControlScheme *controls;
 	LiftSystem *lift;
+	AlignmentGuide *guide;
 
 	Joystick *driveStick;
 	Joystick *liftStick;
@@ -28,16 +29,16 @@ private:
 	Ultrasonic *sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel *m_pdp;
-	USBCamera *cam = new USBCamera("cam0", 0);
+	USBCamera *cam = new USBCamera("cam1", 0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
 		m_pdp = new PowerDistributionPanel();
-		lw = LiveWindow::GetInstance();
-		CameraServer::GetInstance()->SetQuality(50);
-		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+//		lw = LiveWindow::GetInstance();
+//		CameraServer::GetInstance()->SetQuality(50);
+//		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		// Drive System
 		SpeedController *fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController *fr = new CANTalon(Hardware::frontRightDriveMotor);
@@ -67,21 +68,19 @@ private:
 		drive->stability = stability;
 		lift->stability = stability;
 
-		/*	//Alignment Guide
-				Ultrasonic* leftUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
-				Ultrasonic* rightUS = new Ultrasonic((uint32_t)0,(uint32_t)0);
-				alignment = new AlignmentGuide(leftUS,rightUS);
-*/
-		sonarR = new Ultrasonic(Hardware::sonarPingR, Hardware::sonarEchoR);
-		sonarR->SetAutomaticMode(true);
+		//Alignment Guide
 
+		sonarR = new Ultrasonic(Hardware::sonarPingR, Hardware::sonarEchoR);
 		sonarL = new Ultrasonic(Hardware::sonarPingL, Hardware::sonarEchoL);
-		sonarL->SetAutomaticMode(true);
+		guide = new AlignmentGuide(sonarL, sonarR);
+		guide->setAutomaticSensors(true);
+
 
 		// Autonomous
 		autoTimer = new Timer();
 
 		m_pdp->ClearStickyFaults();
+
 	}
 
 	void AutonomousInit()
@@ -161,17 +160,14 @@ private:
 	void printDiagnostics(double x, double y, double r)
 	{
 		// PDP and Carmera
-		SmartDashboard::PutNumber("X", x);
-		SmartDashboard::PutNumber("Y", y);
-		SmartDashboard::PutNumber("R", r);
+		SmartDashboard::PutNumber("Joystick X", driveStick->GetX());
+		SmartDashboard::PutNumber("Joystick Y", driveStick->GetY());
+		SmartDashboard::PutNumber("Joystick R", driveStick->GetZ());
 
 		SmartDashboard::PutNumber("sonarL", sonarL->GetRangeInches());
 		SmartDashboard::PutNumber("sonarR", sonarR->GetRangeInches());
+		SmartDashboard::PutNumber("Alignment different", guide->PIDGet());
 
-		if (uls->Get())
-		{
-			SmartDashboard::PutBoolean("Tester", uls->Get());
-		}
 		SmartDashboard::PutNumber("Lift Motor", m_pdp->GetCurrent(3));
 		SmartDashboard::PutBoolean("upper limit switch", !uls->Get());
 		SmartDashboard::PutBoolean("lower limit switch", !lls->Get());

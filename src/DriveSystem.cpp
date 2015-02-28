@@ -31,6 +31,9 @@ void DriveSystem::driveRobot(double x, double y, double r,
 														 bool rotationCompensationEnabledState, bool useWPI)
 {
 	stability->stabilizeDriveControls(x, y, r, rotationCompensationEnabledState);
+	SmartDashboard::PutNumber("Motor X", x);
+	SmartDashboard::PutNumber("Motor Y", y);
+	SmartDashboard::PutNumber("Motor R", r);
 	switch (referenceFrame)
 	{
 	case ControlReferenceFrame::Absolute:

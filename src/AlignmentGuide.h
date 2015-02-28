@@ -21,6 +21,8 @@ public:
 	virtual double PIDGet();
 	virtual void PIDWrite(float output);
 
+	void setAutomaticSensors(bool value);
+
 private:
 	Ultrasonic *ls, *rs;
 	double rotationSpeed = 0.0;

@@ -11,6 +11,8 @@ const int ABSOLUTE_REFRENCE_FRAME_BUTTON = 11;
 const int RELATIVE_REFRENCE_FRAME_BUTTON = 12;
 const int ENABLE_ROTATION_COMPENSATION_BUTTON = 9;
 const int DISABLE_ROTATION_COMPENSATION_BUTTON = 10;
+const int PERFECT_ROTATION_POSITIVE = 5;
+const int PERFECT_ROTATION_NEGATIVE = 6;
 
 const int FLAPS_UP_BUTTON = 3;
 const int FLAPS_DOWN_BUTTON = 2;
@@ -66,11 +68,11 @@ bool ControlScheme::getPerfectControls(double &x, double &y, double &r)
 			y = -1;
 		}
 	}
-	if (driveStick->GetRawButton(6))
+	if (driveStick->GetRawButton(PERFECT_ROTATION_NEGATIVE))
 	{
 		r = -1;
 	}
-	else if (driveStick->GetRawButton(5))
+	else if (driveStick->GetRawButton(PERFECT_ROTATION_POSITIVE))
 	{
 		r = 1;
 	}
@@ -88,20 +90,17 @@ void ControlScheme::getLiftControls(double &vs, double &liftHeight,
 
 	if (liftStick->GetRawButton(6))
 	{
-		presetHeight = 0;
+		presetHeight = .1;
 	}
 	if (liftStick->GetRawButton(7))
 	{
-		presetHeight = 0;
+		presetHeight = 1;
 	}
 	if (liftStick->GetRawButton(9))
 	{
-		presetHeight = 0;
+		presetHeight = 2;
 	}
-	if (liftStick->GetRawButton(0))
-	{
-		presetHeight = 0;
-	}
+
 	if (liftStick->GetRawButton(10))
 	{
 		presetHeight = 0;
