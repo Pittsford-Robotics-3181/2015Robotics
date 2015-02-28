@@ -18,9 +18,7 @@ public:
 							SpeedController *br, Gyro *gyro);
 	virtual ~DriveSystem();
 
-	void driveRobot(double x, double y, double r, ControlReferenceFrame frame,
-									bool rotationCompensationEnabledState = false,
-									bool useWPI = false);
+	void driveRobot(double x, double y, double r);
 
 	StabilityMonitor *stability;
 

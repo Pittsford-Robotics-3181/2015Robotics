@@ -14,8 +14,8 @@ const int DISABLE_ROTATION_COMPENSATION_BUTTON = 10;
 const int PERFECT_ROTATION_POSITIVE = 5;
 const int PERFECT_ROTATION_NEGATIVE = 6;
 
-const int FLAPS_UP_BUTTON = 3;
-const int FLAPS_DOWN_BUTTON = 2;
+const int FLAPS_UP_BUTTON = 5;
+const int FLAPS_DOWN_BUTTON = 3;
 
 ControlScheme::ControlScheme(Joystick *drive, Joystick *lift)
 {

@@ -10,7 +10,8 @@ class Robot : public IterativeRobot
 {
 private:
 	LiveWindow *lw;
-	DriveSystem *drive;
+	//DriveSystem *drive;
+	RobotDrive* robotDrive;
 	ControlScheme *controls;
 	LiftSystem *lift;
 	AlignmentGuide *guide;
@@ -19,6 +20,8 @@ private:
 	Joystick *liftStick;
 
 	Gyro *driveGyro;
+
+	bool flapUp = false;
 
 	DigitalInput *lls;
 	DigitalInput *uls;
@@ -45,12 +48,16 @@ private:
 		SpeedController *bl = new CANTalon(Hardware::backLeftDriveMotor);
 		SpeedController *br = new CANTalon(Hardware::backRightDriveMotor);
 		driveGyro = new Gyro(Hardware::driveRotationGyro);
-		drive = new DriveSystem(fl, fr, bl, br, driveGyro);
+		robotDrive = new RobotDrive(fl, bl, fr, br);
+		//RobotDrive(SpeedController *frontLeftMotor, SpeedController *rearLeftMotor,
+		//SpeedController *frontRightMotor, SpeedController *rearRightMotor);
+		robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+		robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+		//drive = new DriveSystem(fl, fr, bl, br, driveGyro);
 
 		// Lift System
 		SpeedController *lm = new CANTalon(Hardware::liftMotor);
-		Encoder *le =
-				new Encoder(Hardware::liftEncoderPort1, Hardware::liftEncoderPort2);
+		Encoder *le = new Encoder(Hardware::liftEncoderPort1, Hardware::liftEncoderPort2);
 		uls = new DigitalInput(Hardware::liftProxUpper);
 		lls = new DigitalInput(Hardware::liftProxLower);
 		Servo *lfs = new Servo(Hardware::leftServo);
@@ -65,7 +72,7 @@ private:
 		// Stability Monitor
 		StabilityMonitor *stability = new StabilityMonitor();
 		stability->rotationGyro = driveGyro;
-		drive->stability = stability;
+		//drive->stability = stability;
 		lift->stability = stability;
 
 		//Alignment Guide
@@ -95,11 +102,11 @@ private:
 		if (autoTimer->Get() > 5)
 		{
 			autoTimer->Stop();
-			drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute,true);
+			//drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute,true);
 		}
 		else
 		{
-			drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute,true);
+			//drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute,true);
 		}
 	}
 
@@ -121,7 +128,7 @@ private:
 		case ControlAlignmentMode::Carry:
 			// alignment->disable();
 			controls->getDriveControls(x, y, r);
-			x = Calibration::CARRY_XPR * r;
+			//x = Calibration::CARRY_XPR * r;
 			break;
 		case ControlAlignmentMode::Drive:
 			// alignment->disable();
@@ -130,11 +137,12 @@ private:
 		}
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		bool rotationComp = controls->isRotationCompensationDisabled();
-		drive->driveRobot(x, y, r, referenceFrame, rotationComp, true);
+		//drive->driveRobot(x, y, r, referenceFrame, 0, true);
+		robotDrive->MecanumDrive_Cartesian(x, y, r, 0);
 
 		// Lift
 		double vs = 0, liftHeight = 0;
-		bool flapUp = false;
+
 		controls->getLiftControls(vs, liftHeight, flapUp);
 		liftValue = vs;
 		if (liftHeight >= 0)
@@ -173,6 +181,8 @@ private:
 		SmartDashboard::PutBoolean("lower limit switch", !lls->Get());
 
 		SmartDashboard::PutNumber("liftValue", liftValue);
+		SmartDashboard::PutString("Right flap motor", flapUp ? "rotatingUp":"raotatingDown");
+
 		// Get the current going through channel 7, in Amperes.
 		// The PDP returns the current in increments of 0.125A.
 		// At low currents the current readings tend to be less accurate.
