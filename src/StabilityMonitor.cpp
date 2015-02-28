@@ -69,11 +69,11 @@ StabilityMonitor::stabilizeDriveControls(double &x, double &y, double &r,
 	}
 	// Motion Compensation
 	double rot = r;
-	rotationComp.compensateControl(rot, rotationGyro->GetRate());
-	if (rotationCompensationEnabledState)
-	{
-		r = rot;
-	}
+	//rotationComp.compensateControl(rot, rotationGyro->GetRate());
+//	if (rotationCompensationEnabledState)
+//	{
+//		r = rot;
+//	}
 }
 void StabilityMonitor::stabilizeLiftControls(double &vs)
 {

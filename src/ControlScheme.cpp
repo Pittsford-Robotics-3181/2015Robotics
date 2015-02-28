@@ -28,8 +28,8 @@ void ControlScheme::getDriveControls(double &x, double &y, double &r)
 	if (!getPerfectControls(x, y, r))
 	{
 		x = driveStick->GetX();
-		y = -driveStick->GetY();
-		r = -driveStick->GetTwist();
+		y = driveStick->GetY();
+		r = driveStick->GetTwist();
 	}
 	// Deadzone
 	if (fabs(x) < 0.1)
@@ -61,20 +61,20 @@ bool ControlScheme::getPerfectControls(double &x, double &y, double &r)
 		}
 		if (hat < 90 || hat > 270)
 		{
-			y = 1;
+			y = -1;
 		}
 		else if (hat > 90 && hat < 270)
 		{
-			y = -1;
+			y = 1;
 		}
 	}
 	if (driveStick->GetRawButton(PERFECT_ROTATION_NEGATIVE))
 	{
-		r = -1;
+		r = 1;
 	}
 	else if (driveStick->GetRawButton(PERFECT_ROTATION_POSITIVE))
 	{
-		r = 1;
+		r = -1;
 	}
 	else
 	{

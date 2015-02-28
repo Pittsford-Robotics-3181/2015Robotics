@@ -14,11 +14,12 @@
 class DriveSystem
 {
 public:
-	DriveSystem(SpeedController *fl, SpeedController *fr, SpeedController *bl,
+	DriveSystem(SpeedController *fl, SpeedController *bl, SpeedController *fr,
 							SpeedController *br, Gyro *gyro);
 	virtual ~DriveSystem();
-
-	void driveRobot(double x, double y, double r);
+	//RobotDrive(SpeedController *frontLeftMotor, SpeedController *rearLeftMotor,
+			//SpeedController *frontRightMotor, SpeedController *rearRightMotor);
+	void driveRobot(double x, double y, double r,ControlReferenceFrame referenceFrame, bool rotationCompensationEnabledState);
 
 	StabilityMonitor *stability;
 

@@ -10,7 +10,7 @@ class Robot : public IterativeRobot
 {
 private:
 	LiveWindow *lw;
-	//DriveSystem *drive;
+	DriveSystem *drive;
 	RobotDrive* robotDrive;
 	ControlScheme *controls;
 	LiftSystem *lift;
@@ -32,7 +32,7 @@ private:
 	Ultrasonic *sonarL;
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel *m_pdp;
-	USBCamera *cam = new USBCamera("cam1", 0);
+	//USBCamera *cam = new USBCamera("cam1", 0);
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
@@ -48,12 +48,11 @@ private:
 		SpeedController *bl = new CANTalon(Hardware::backLeftDriveMotor);
 		SpeedController *br = new CANTalon(Hardware::backRightDriveMotor);
 		driveGyro = new Gyro(Hardware::driveRotationGyro);
-		robotDrive = new RobotDrive(fl, bl, fr, br);
+
 		//RobotDrive(SpeedController *frontLeftMotor, SpeedController *rearLeftMotor,
 		//SpeedController *frontRightMotor, SpeedController *rearRightMotor);
-		robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-		robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
-		//drive = new DriveSystem(fl, fr, bl, br, driveGyro);
+
+		drive = new DriveSystem(fl, bl, fr, br, driveGyro);
 
 		// Lift System
 		SpeedController *lm = new CANTalon(Hardware::liftMotor);
@@ -128,17 +127,18 @@ private:
 		case ControlAlignmentMode::Carry:
 			// alignment->disable();
 			controls->getDriveControls(x, y, r);
-			//x = Calibration::CARRY_XPR * r;
+			x = Calibration::CARRY_XPR * r;
 			break;
 		case ControlAlignmentMode::Drive:
 			// alignment->disable();
 			controls->getDriveControls(x, y, r);
 			break;
 		}
+
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		bool rotationComp = controls->isRotationCompensationDisabled();
-		//drive->driveRobot(x, y, r, referenceFrame, 0, true);
-		robotDrive->MecanumDrive_Cartesian(x, y, r, 0);
+		drive->driveRobot(x, y, r, referenceFrame, rotationComp);
+
 
 		// Lift
 		double vs = 0, liftHeight = 0;
@@ -189,7 +189,7 @@ private:
 		SmartDashboard::PutNumber("Front Left 15", m_pdp->GetCurrent(15));
 		SmartDashboard::PutNumber("Front Right 14", m_pdp->GetCurrent(14));
 		SmartDashboard::PutNumber("Back Left 12", m_pdp->GetCurrent(12));
-		SmartDashboard::PutNumber("Back Right 13", m_pdp->GetCurrent(13));
+		SmartDashboard::PutNumber("Back Right 13", m_pdp->GetCurrent(3));
 		// Get the voltage going into the PDP, in Volts.
 		// The PDP returns the voltage in increments of 0.05 Volts.
 		SmartDashboard::PutNumber("Voltage", m_pdp->GetVoltage());
@@ -199,6 +199,7 @@ private:
 		SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
 	}
 
+//Users/public/documents/frc/FRC Data Storage, delete this to get dashboard to depl
 	void TestPeriodic()
 	{
 		lw->Run();
