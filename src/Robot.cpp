@@ -40,8 +40,8 @@ private:
 	{
 		m_pdp = new PowerDistributionPanel();
 //		lw = LiveWindow::GetInstance();
-//		CameraServer::GetInstance()->SetQuality(50);
-//		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		CameraServer::GetInstance()->SetQuality(50);
+		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		// Drive System
 		SpeedController *fl = new CANTalon(Hardware::frontLeftDriveMotor);
 		SpeedController *fr = new CANTalon(Hardware::frontRightDriveMotor);
