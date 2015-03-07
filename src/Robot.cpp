@@ -97,6 +97,7 @@ private:
 	void TeleopInit()
 	{
 		lift->liftEncoder->Reset();
+		driveGyro->Reset();
 	}
 
 	void TeleopPeriodic()

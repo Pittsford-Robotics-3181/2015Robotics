@@ -23,9 +23,10 @@ class MotionCompensator
 {
 public:
 	double controlToSensorRatio = 1, tolerance = 0;
-	void compensateControl(double &control, double sensorVal);
+	void compensateControl(double &control, double sensorVal, bool enabled, bool recursive = false);
 
 private:
+	void invertSensor();
 	double prevControl = 0;
 };
 

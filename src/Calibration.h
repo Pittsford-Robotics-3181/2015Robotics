@@ -13,10 +13,10 @@ namespace Calibration
 
 const double CARRY_XPR = 1.85;
 
-const double MAX_ACCEL_X = 0.02;
-const double MAX_ACCEL_Y = 0.015;
-const double MAX_ACCEL_MAG = 0.02;
-const double MAX_ACCEL_R = 0.02;
+const double MAX_ACCEL_X = 0.01;
+const double MAX_ACCEL_Y = 0.01;
+const double MAX_ACCEL_MAG = 0.01;
+const double MAX_ACCEL_R = 0.01;
 const double MAX_ACCEL_LIFT = 0.05;
 
 const double ROT_COMP_CONTROL_SENSOR_RATIO = -0.00425;

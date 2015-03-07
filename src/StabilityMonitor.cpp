@@ -8,6 +8,8 @@
 #include "StabilityMonitor.h"
 #include <math.h>
 #include "Calibration.h"
+#include <iostream>
+#include <fstream>
 
 void JerkLimiter::limitJerk(double &control)
 {
@@ -19,9 +21,9 @@ void JerkLimiter::limitJerk(double &control)
 	}
 	prevControl = control;
 }
-void MotionCompensator::compensateControl(double &control, double sensorVal)
+void MotionCompensator::compensateControl(double &control, double sensorVal,bool enabled, bool recursive)
 {
-	double motionOffset = sensorVal * controlToSensorRatio;
+/*	double motionOffset = sensorVal * controlToSensorRatio;
 	SmartDashboard::PutNumber("Sensor Value", motionOffset);
 	SmartDashboard::PutNumber("Control Value", control);
 
@@ -29,9 +31,45 @@ void MotionCompensator::compensateControl(double &control, double sensorVal)
 	{
 		motionOffset -= prevControl;
 		motionOffset -= tolerance * fabs(motionOffset) / motionOffset;
-		control -= motionOffset;
+		if (fabs(motionOffset) > 0.7 && enabled && !recursive) {
+			invertSensor();
+			compensateControl(control,sensorVal,enabled,true);
+		}
+		if (enabled){
+			control -= motionOffset;
+			prevControl  = control;
+		} else {
+			prevControl = control - motionOffset;
+		}
+	} else {
+		prevControl = control;
 	}
-	prevControl = control;
+	*/
+}
+void MotionCompensator::invertSensor(){
+	bool inverted = false;
+
+	std::ifstream inFile;
+	inFile.open("/INVERSION.txt");
+	if (!inFile.fail()) {
+		char ch;
+		inFile.get(ch);
+		inFile.close();
+		if (ch == 'F') {
+			inverted = true;
+		}
+	}
+
+	inverted = !inverted;
+	controlToSensorRatio = fabs(controlToSensorRatio);
+	controlToSensorRatio = inverted ? -1 : 1;
+
+	std::ofstream outFile;
+	outFile.open("/INVERSION.txt");
+	if (!outFile.fail()) {
+		outFile.put(inverted ? 'F' : 'T');
+	}
+	outFile.close();
 }
 
 StabilityMonitor::StabilityMonitor()
@@ -67,13 +105,11 @@ StabilityMonitor::stabilizeDriveControls(double &x, double &y, double &r,
 		x *= fabs(mag / mag0);
 		y *= fabs(mag / mag0);
 	}
+
 	// Motion Compensation
-	double rot = r;
-	//rotationComp.compensateControl(rot, rotationGyro->GetRate());
-//	if (rotationCompensationEnabledState)
-//	{
-//		r = rot;
-//	}
+	//double sensor = rotationGyro->GetRate();
+	//rotationComp.compensateControl(r, sensor,rotationCompensationEnabledState);
+
 }
 void StabilityMonitor::stabilizeLiftControls(double &vs)
 {
