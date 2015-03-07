@@ -2,19 +2,17 @@
 #include "ControlScheme.h"
 #include "DriveSystem.h"
 #include "LiftSystem.h"
-#include "AlignmentGuide.h"
 #include "Calibration.h"
 #include "Hardware.h"
 
 class Robot : public IterativeRobot
 {
 private:
-	LiveWindow *lw;
+
 	DriveSystem *drive;
 	RobotDrive* robotDrive;
 	ControlScheme *controls;
 	LiftSystem *lift;
-	AlignmentGuide *guide;
 
 	Joystick *driveStick;
 	Joystick *liftStick;
@@ -25,21 +23,19 @@ private:
 
 	DigitalInput *lls;
 	DigitalInput *uls;
-	AlignmentGuide *alignment;
 	Timer *autoTimer;
 	double liftValue = 0;
-	Ultrasonic *sonarR;
-	Ultrasonic *sonarL;
+
 	// Object for dealing with the Power Distribution Panel (PDP).
 	PowerDistributionPanel *m_pdp;
-	//USBCamera *cam = new USBCamera("cam1", 0);
+
 	// Update every 5milliseconds/0.005 seconds.
 	const double kUpdatePeriod = 0.005;
 
 	void RobotInit()
 	{
 		m_pdp = new PowerDistributionPanel();
-//		lw = LiveWindow::GetInstance();
+
 		CameraServer::GetInstance()->SetQuality(50);
 		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		// Drive System
@@ -48,9 +44,6 @@ private:
 		SpeedController *bl = new CANTalon(Hardware::backLeftDriveMotor);
 		SpeedController *br = new CANTalon(Hardware::backRightDriveMotor);
 		driveGyro = new Gyro(Hardware::driveRotationGyro);
-
-		//RobotDrive(SpeedController *frontLeftMotor, SpeedController *rearLeftMotor,
-		//SpeedController *frontRightMotor, SpeedController *rearRightMotor);
 
 		drive = new DriveSystem(fl, bl, fr, br, driveGyro);
 
@@ -74,14 +67,6 @@ private:
 		//drive->stability = stability;
 		lift->stability = stability;
 
-		//Alignment Guide
-
-		sonarR = new Ultrasonic(Hardware::sonarPingR, Hardware::sonarEchoR);
-		sonarL = new Ultrasonic(Hardware::sonarPingL, Hardware::sonarEchoL);
-		guide = new AlignmentGuide(sonarL, sonarR);
-		guide->setAutomaticSensors(true);
-
-
 		// Autonomous
 		autoTimer = new Timer();
 
@@ -101,11 +86,11 @@ private:
 		if (autoTimer->Get() > 5)
 		{
 			autoTimer->Stop();
-			//drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute,true);
+			drive->driveRobot(0,0,0,ControlReferenceFrame::Absolute,true);
 		}
 		else
 		{
-			//drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute,true);
+			drive->driveRobot(0,-1,0,ControlReferenceFrame::Absolute,true);
 		}
 	}
 
@@ -116,6 +101,7 @@ private:
 
 	void TeleopPeriodic()
 	{
+
 		// Drive
 		double x = 0, y = 0, r = 0;
 		switch (controls->getAlignmentMode())
@@ -137,7 +123,7 @@ private:
 
 		ControlReferenceFrame referenceFrame = controls->getDriveReferenceFrame();
 		bool rotationComp = controls->isRotationCompensationDisabled();
-		drive->driveRobot(x, y, r, referenceFrame, rotationComp);
+			drive->driveRobot(x, y, r, referenceFrame, rotationComp);
 
 
 		// Lift
@@ -163,6 +149,7 @@ private:
 		}
 
 		printDiagnostics(x, y, r);
+
 	}
 
 	void printDiagnostics(double x, double y, double r)
@@ -171,10 +158,6 @@ private:
 		SmartDashboard::PutNumber("Joystick X", driveStick->GetX());
 		SmartDashboard::PutNumber("Joystick Y", driveStick->GetY());
 		SmartDashboard::PutNumber("Joystick R", driveStick->GetZ());
-
-		SmartDashboard::PutNumber("sonarL", sonarL->GetRangeInches());
-		SmartDashboard::PutNumber("sonarR", sonarR->GetRangeInches());
-		SmartDashboard::PutNumber("Alignment different", guide->PIDGet());
 
 		SmartDashboard::PutNumber("Lift Motor", m_pdp->GetCurrent(3));
 		SmartDashboard::PutBoolean("upper limit switch", !uls->Get());
@@ -199,11 +182,7 @@ private:
 		SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
 	}
 
-//Users/public/documents/frc/FRC Data Storage, delete this to get dashboard to depl
-	void TestPeriodic()
-	{
-		lw->Run();
-	}
+
 };
 
 START_ROBOT_CLASS(Robot);

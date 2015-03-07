@@ -42,7 +42,7 @@ void DriveSystem::driveRobot(double x, double y, double r, ControlReferenceFrame
 	switch (referenceFrame)
 	{
 	case ControlReferenceFrame::Absolute:
-		rd->MecanumDrive_Cartesian(x, y, r,0);
+		rd->MecanumDrive_Cartesian(x, y, r, rotationGyro->GetAngle());
 		break;
 	case ControlReferenceFrame::Relative:
 		rd->MecanumDrive_Cartesian(x, y, r, 0);

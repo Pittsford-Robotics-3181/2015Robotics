@@ -140,8 +140,7 @@ bool ControlScheme::isRotationCompensationDisabled()
 }
 ControlAlignmentMode ControlScheme::getAlignmentMode()
 {
-	return liftStick->GetTrigger() ? ControlAlignmentMode::Carry
-																 : ControlAlignmentMode::Drive;
+	return liftStick->GetTrigger() ? ControlAlignmentMode::Carry : ControlAlignmentMode::Drive;
 }
 ControlReferenceFrame ControlScheme::getDriveReferenceFrame()
 {
