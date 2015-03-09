@@ -8,4 +8,3 @@ install:
 script:
     - make
     - clang-format --style=file -i src/*.cpp src/*.h
-    - git diff --exit-code
