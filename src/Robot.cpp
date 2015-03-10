@@ -21,6 +21,7 @@ private:
 
 	bool flapUp = false;
 
+
 	DigitalInput *lls;
 	DigitalInput *uls;
 	Timer *autoTimer;
@@ -50,6 +51,7 @@ private:
 		// Lift System
 		SpeedController *lm = new CANTalon(Hardware::liftMotor);
 		Encoder *le = new Encoder(Hardware::liftEncoderPort1, Hardware::liftEncoderPort2);
+
 		uls = new DigitalInput(Hardware::liftProxUpper);
 		lls = new DigitalInput(Hardware::liftProxLower);
 		Servo *lfs = new Servo(Hardware::leftServo);
@@ -76,8 +78,7 @@ private:
 
 	void AutonomousInit()
 	{
-		autoTimer->Reset();
-		autoTimer->Start();
+
 	}
 
 	void AutonomousPeriodic()
