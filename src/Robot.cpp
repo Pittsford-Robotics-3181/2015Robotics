@@ -19,6 +19,7 @@ private:
 	Joystick *liftStick;
 
 	Gyro *driveGyro;
+	Encoder *encoder;
 
 	bool flapUp = false;
 
@@ -51,13 +52,13 @@ private:
 
 		// Lift System
 		SpeedController *lm = new CANTalon(Hardware::liftMotor);
-		Encoder *le = new Encoder(Hardware::liftEncoderPort1, Hardware::liftEncoderPort2);
+		encoder = new Encoder(Hardware::liftEncoderChannelA, Hardware::liftEncoderChannelB);
 
 		uls = new DigitalInput(Hardware::liftProxUpper);
 		lls = new DigitalInput(Hardware::liftProxLower);
 		Servo *lfs = new Servo(Hardware::leftServo);
 		Servo *rfs = new Servo(Hardware::rightServo);
-		lift = new LiftSystem(lm, le, uls, lls, lfs, rfs);
+		lift = new LiftSystem(lm, encoder, uls, lls, lfs, rfs);
 
 		// Control Scheme
 		driveStick = new Joystick(0);
@@ -181,6 +182,8 @@ private:
 		SmartDashboard::PutNumber("Voltage", m_pdp->GetVoltage());
 		// Retrieves the temperature of the PDP, in degrees Celsius.
 		SmartDashboard::PutNumber("Temperature", m_pdp->GetTemperature());
+
+		SmartDashboard::PutNumber("LeadScrewEncoder",encoder->Get());
 
 		SmartDashboard::PutNumber("Rotation Rate", driveGyro->GetRate());
 	}

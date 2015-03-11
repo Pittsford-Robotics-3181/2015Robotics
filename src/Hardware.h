@@ -27,8 +27,8 @@ const uint8_t powerDistributionChannelLiftMotor = 3;
 // SENSORS
 const uint32_t driveRotationGyro = 0;
 
-const uint32_t liftEncoderPort1 = 0;
-const uint32_t liftEncoderPort2 = 1;
+const uint32_t liftEncoderChannelA = 0;
+const uint32_t liftEncoderChannelB = 1;
 
 const uint32_t liftProxUpper = 3;
 const uint32_t liftProxLower = 2;
