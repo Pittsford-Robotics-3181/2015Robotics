@@ -59,10 +59,9 @@ class Robot : public IterativeRobot
 			
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
-			
-			camera          = new USBCamera("cam0", 1);
+
 			CameraServer::GetInstance()->SetQuality(50);
-			CameraServer::GetInstance()->StartAutomaticCapture(shared_ptr<USBCamera>(camera));
+			CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 			
 		}
 
@@ -80,9 +79,10 @@ class Robot : public IterativeRobot
 
 		void TeleopPeriodic()
 		{
-			robotDrive->MecanumDrive_Cartesian(rightStick->GetX(), rightStick->GetY(), rightStick->GetTwist(), 0.0f);
-			liftMotor->Set(min(max(leftStick->GetY(), float(-upperLiftSensor->Get())), float(lowerLiftSensor->Get())));
-			liftState = leftStick->GetRawButton(2) ? 1 : rightStick->GetRawButton(3) ? 0 : liftState;
+			robotDrive->MecanumDrive_Cartesian(rightStick->GetX()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetY()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetTwist()*(rightStick->GetThrottle()+1.0f)/2.0f, 0.0f);
+			liftMotor->Set(min(max(leftStick->GetY()*0.75f + static_cast<float>(sin(GetClock()/1000.0f))*0.25f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			liftState |= leftStick->GetRawButton(6);
+			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
 			rightLiftServo->Set(90 * !liftState);
 		}
