@@ -30,6 +30,8 @@ class Robot : public IterativeRobot
 		
 		USBCamera*              camera;
 
+		Timer*					timer;
+
 		void RobotInit()
 		{
 			liftState       = false;
@@ -67,10 +69,20 @@ class Robot : public IterativeRobot
 
 		void AutonomousInit()
 		{
+			timer->Reset();
+			timer->Start();
 		}
 
 		void AutonomousPeriodic()
 		{
+			if(timer->Get() < 5)
+			{
+				robotDrive->MecanumDrive_Cartesian(0,.2,0,0);
+			}
+			else
+			{
+			}
+
 		}
 
 		void TeleopInit()
