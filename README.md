@@ -1,6 +1,6 @@
 2015 Robot Code for Pittsford Panthers Robotics
 ===============================================
-[![Build Status](https://travis-ci.org/Pittsford-Robotics-3181/2015Robotics.svg?branch=sirchangealot)](https://travis-ci.org/Pittsford-Robotics-3181/2015Robotics)
+[![Build Status](https://travis-ci.org/Pittsford-Robotics-3181/2015Robotics.svg?branch=feature/sonardisplay)](https://travis-ci.org/Pittsford-Robotics-3181/2015Robotics)
 
 Here is a line-by-line explanation of my code, well at least the TeleopPeriodic() method, because that's where the stuff that people might find confusing is.
 ```
