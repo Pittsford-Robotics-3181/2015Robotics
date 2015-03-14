@@ -79,8 +79,8 @@ class Robot : public IterativeRobot
 
 		void TeleopPeriodic()
 		{
-			robotDrive->MecanumDrive_Cartesian(rightStick->GetX()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetY()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetTwist()*(rightStick->GetThrottle()+1.0f)/2.0f, 0.0f);
-			liftMotor->Set(min(max(leftStick->GetY()*0.75f + static_cast<float>(sin(GetClock()/1000.0f))*0.25f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			robotDrive->MecanumDrive_Cartesian(rightStick->GetX()*(1.0f - rightStick->GetThrottle())/2.0f, rightStick->GetY() * (1.0f - rightStick->GetThrottle())/2.0f, rightStick->GetTwist() * (1.0f - rightStick->GetThrottle())/2.0f, 0.0f);
+			liftMotor->Set(min(max((leftStick->GetY() * 0.75f + static_cast<float>(sin(GetClock()/1000.0f)) * 0.25f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
