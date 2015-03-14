@@ -48,6 +48,7 @@ class Robot : public IterativeRobot
 			liftMotor       = new CANTalon(5);
 
 			robotDrive      = new RobotDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+			robotDrive->SetSafetyEnabled(false);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor,  0);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontRightMotor, 1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
