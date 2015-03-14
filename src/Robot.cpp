@@ -19,6 +19,8 @@ class Robot : public IterativeRobot
 		CANTalon*               rearLeftMotor;
 		CANTalon*               liftMotor;
 
+		Encoder*				encoder;
+
 		RobotDrive*             robotDrive;
 
 		Joystick*               leftStick;
@@ -53,6 +55,8 @@ class Robot : public IterativeRobot
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor,   0);
 
+			encoder			= new Encoder(0,1,true,Encoder::k4X);
+
 			leftStick       = Joystick::GetStickForPort(0);
 			rightStick      = Joystick::GetStickForPort(1);
 			
@@ -61,6 +65,8 @@ class Robot : public IterativeRobot
 			
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
+
+
 
 			CameraServer::GetInstance()->SetQuality(50);
 			CameraServer::GetInstance()->StartAutomaticCapture("cam1");
@@ -77,6 +83,7 @@ class Robot : public IterativeRobot
 
 		void TeleopInit()
 		{
+			encoder->Reset();
 		}
 
 		void TeleopPeriodic()
@@ -95,6 +102,9 @@ class Robot : public IterativeRobot
 				rotation = rightStick->GetTwist();
 			}
 			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0.0f);
+			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
+				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			}
 			liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
