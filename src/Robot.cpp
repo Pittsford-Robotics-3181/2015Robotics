@@ -2,6 +2,13 @@
 
 using namespace std;
 
+enum State
+{
+	DriveRobot,
+	StopRobot
+
+};
+
 class Robot : public IterativeRobot
 {
 	private:
@@ -31,6 +38,7 @@ class Robot : public IterativeRobot
 		USBCamera*              camera;
 
 		Timer*					timer;
+		State					state;
 
 		void RobotInit()
 		{
@@ -62,6 +70,8 @@ class Robot : public IterativeRobot
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
 
+			state = 0;
+
 			CameraServer::GetInstance()->SetQuality(50);
 			CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 			
@@ -69,18 +79,44 @@ class Robot : public IterativeRobot
 
 		void AutonomousInit()
 		{
+
 			timer->Reset();
 			timer->Start();
 		}
 
 		void AutonomousPeriodic()
 		{
+
+			if(state = )
+
 			if(timer->Get() < 5)
 			{
-				robotDrive->MecanumDrive_Cartesian(0,.2,0,0);
+				if(timer->Get() < 5)
+				{
+					state = 1;
+				}
+				else if(timer->Get() > 5 && timer->Get() < 10 )
+				{
+					state = 2;
+				}
+				if(state != 2 && state < 5 && state != 0){
+
+					robotDrive->MecanumDrive_Cartesian(0,.2,0,0);
+				}
+
+				if(state == 2){
+					liftMotor->Set(min(max(0.5f*0.75f + static_cast<float>(sin(GetClock()/1000.0f))*0.25f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+
 			}
-			else
+
+			else if(timer->Get() > 5 && timer->Get() < 10)
 			{
+
+			}
+			else if(timer->Get() > 10 && timer->Get() < 15)
+			{
+				robotDrive->MecanumDrive_Cartesian(0,-.2,0,0);
 			}
 
 		}
