@@ -7,6 +7,8 @@ class Robot : public IterativeRobot
 	private:
 		bool liftState;
 		
+		double x, y, rotation, throttle;
+		
 		LiveWindow*             lw;
 		
 		PowerDistributionPanel* pdp;
@@ -46,6 +48,7 @@ class Robot : public IterativeRobot
 			liftMotor       = new CANTalon(5);
 
 			robotDrive      = new RobotDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+			robotDrive->SetSafetyEnabled(false);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor,  0);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontRightMotor, 1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
@@ -79,8 +82,21 @@ class Robot : public IterativeRobot
 
 		void TeleopPeriodic()
 		{
-			robotDrive->MecanumDrive_Cartesian(rightStick->GetX()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetY()*(rightStick->GetThrottle()+1.0f)/2.0f, rightStick->GetTwist()*(rightStick->GetThrottle()+1.0f)/2.0f, 0.0f);
-			liftMotor->Set(min(max(leftStick->GetY()*0.75f + static_cast<float>(sin(GetClock()/1000.0f))*0.25f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			throttle = (1.0f - rightStick->GetThrottle())/2.0f;
+			if(rightStick->GetPOV() != -1 || rightStick->GetRawButton(5) || rightStick->GetRawButton(6))
+			{
+				x = sin(rightStick->GetPOV() * 3.14159265f/180.0f);
+				y = -cos(rightStick->GetPOV() * 3.14159265f/180.0f);
+				rotation = rightStick->GetRawButton(6) - rightStick->GetRawButton(5);
+			}
+			else
+			{
+				x = rightStick->GetX();
+				y = rightStick->GetY();
+				rotation = rightStick->GetTwist();
+			}
+			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0.0f);
+			liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
