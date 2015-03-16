@@ -103,9 +103,9 @@ class Robot : public IterativeRobot
 				rotation = rightStick->GetTwist();
 			}
 			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0.0f);
-			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
-				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
-			}
+//			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
+//				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+//			}
 			liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
@@ -117,6 +117,17 @@ class Robot : public IterativeRobot
 		{
 			lw->Run();
 		}
+
+		void printDiagnostics()
+		{
+			SmartDashboard::PutNumber("Encoder Count", encoder->Get());
+			SmartDashboard::PutNumber("Encoder Raw Count", encoder->GetRaw());
+			SmartDashboard::PutNumber("Encoder Period", encoder->GetPeriod());
+			SmartDashboard::PutNumber("Encoder Rate", encoder->GetRate());
+			SmartDashboard::PutBoolean("Encoder Direction", encoder->GetDirection());
+			SmartDashboard::PutBoolean("Encoder Stopped", encoder->GetStopped());
+		}
+
 };
 
 START_ROBOT_CLASS(Robot);
