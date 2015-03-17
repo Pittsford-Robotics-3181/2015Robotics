@@ -56,7 +56,7 @@ class Robot : public IterativeRobot
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor,   0);
 
-			encoder			= new Encoder(0,1,true,Encoder::k4X);
+			encoder			= new Encoder(0,1,false,Encoder::k4X);
 
 			leftStick       = Joystick::GetStickForPort(0);
 			rightStick      = Joystick::GetStickForPort(1);
@@ -89,6 +89,9 @@ class Robot : public IterativeRobot
 
 		void TeleopPeriodic()
 		{
+
+			printDiagnostics();
+
 			throttle = (1.0f - rightStick->GetThrottle())/2.0f;
 			if(rightStick->GetPOV() != -1 || rightStick->GetRawButton(5) || rightStick->GetRawButton(6))
 			{
@@ -126,6 +129,7 @@ class Robot : public IterativeRobot
 			SmartDashboard::PutNumber("Encoder Rate", encoder->GetRate());
 			SmartDashboard::PutBoolean("Encoder Direction", encoder->GetDirection());
 			SmartDashboard::PutBoolean("Encoder Stopped", encoder->GetStopped());
+			SmartDashboard::PutBoolean("Lift Flap", liftState);
 		}
 
 };
