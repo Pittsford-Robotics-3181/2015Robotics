@@ -4,7 +4,13 @@ using namespace std;
 
 enum State
 {
-	DriveRobot,
+	DriveToTote,
+	SetUpLift,
+	LowerLift,
+	GrabTote,
+	LiftTote,
+	DriveToZone,
+	DropTote,
 	StopRobot
 
 };
@@ -86,22 +92,92 @@ class Robot : public IterativeRobot
 
 			timer->Reset();
 			timer->Start();
-			state = DriveRobot;
+			state = DriveToTote;
 		}
 
 		void AutonomousPeriodic()
 		{
 
-			if(state == DriveRobot){
-				robotDrive->MecanumDrive_Cartesian(0,0.2,0,0);
-
+			if(state == DriveToTote){
+				robotDrive->MecanumDrive_Cartesian(0,0.6,0,0);
 				if(timer->Get()> 5){
-					state = StopRobot;
+					robotDrive->MecanumDrive_Cartesian(0,0,0,0);
+					state = SetUpLift;
 				}
 			}
-			else if(state == StopRobot){
-				robotDrive->MecanumDrive_Cartesian(0,0,0,0);
+			else if(state == SetUpLift){
+				if(){}
+//				if(encoder->Get() < con)
+//				{
+//					liftMotor->Set(min(max((1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - 0.0f)/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+//				}
+				else
+				{
+					liftState = false;
+					leftLiftServo->Set(90 * liftState);
+					rightLiftServo->Set(90 * !liftState);
+					liftMotor->Set(0);
+					state == GrabTote;
+				}
 			}
+			else if(state == LowerLift)
+			{
+				if(){}
+				//if(encoder->Get() < con){
+//				{
+//					liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - 0.0f)/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				else
+				{
+					liftMotor->Set(0);
+					state = GrabTote;
+				}
+			}
+			else if(state == GrabTote)
+			{
+				liftState = true;
+				leftLiftServo->Set(90 * liftState);
+				rightLiftServo->Set(90 * !liftState);
+				state == LiftTote;
+			}
+
+			else if(state == LiftTote)
+			{
+				if(){}
+			//if(encoder->Get() < con){
+			//				{
+			//					liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - 0.0f)/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				else
+				{
+					liftMotor->Set(0);
+					timer->Reset();
+					state = DriveToZone;
+				}
+			}
+			else if(state == DriveToZone)
+			{
+				robotDrive->MecanumDrive_Cartesian(0,0.6,0,0);
+				if(timer->Get()> 5){
+					robotDrive->MecanumDrive_Cartesian(0,0,0,0);
+					state == DropTote;
+				}
+			}
+			else if(state == DropTote)
+			{
+				if(){}
+				//if(encoder->Get() > con){
+				//				{
+				//					liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - 0.0f)/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				else
+				{
+					liftMotor->Set(0);
+					liftState = false;
+					leftLiftServo->Set(90 * liftState);
+					rightLiftServo->Set(90 * !liftState);
+					state == LiftTote;
+				}
+
+			}
+
 		}
 
 		void TeleopInit()
