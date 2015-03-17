@@ -56,6 +56,7 @@ class Robot : public IterativeRobot
 			liftMotor       = new CANTalon(5);
 
 			robotDrive      = new RobotDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
+			robotDrive->SetSafetyEnabled(false);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontLeftMotor,  0);
 			robotDrive->SetInvertedMotor(RobotDrive::kFrontRightMotor, 1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
@@ -70,7 +71,8 @@ class Robot : public IterativeRobot
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
 
-			state = 0;
+			timer 			= new Timer();
+
 
 			CameraServer::GetInstance()->SetQuality(50);
 			CameraServer::GetInstance()->StartAutomaticCapture("cam1");
@@ -82,43 +84,22 @@ class Robot : public IterativeRobot
 
 			timer->Reset();
 			timer->Start();
+			state = DriveRobot;
 		}
 
 		void AutonomousPeriodic()
 		{
 
-			if(state = )
+			if(state == DriveRobot){
+				robotDrive->MecanumDrive_Cartesian(0,0.2,0,0);
 
-			if(timer->Get() < 5)
-			{
-				if(timer->Get() < 5)
-				{
-					state = 1;
+				if(timer->Get()> 5){
+					state = StopRobot;
 				}
-				else if(timer->Get() > 5 && timer->Get() < 10 )
-				{
-					state = 2;
-				}
-				if(state != 2 && state < 5 && state != 0){
-
-					robotDrive->MecanumDrive_Cartesian(0,.2,0,0);
-				}
-
-				if(state == 2){
-					liftMotor->Set(min(max(0.5f*0.75f + static_cast<float>(sin(GetClock()/1000.0f))*0.25f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
-				}
-
 			}
-
-			else if(timer->Get() > 5 && timer->Get() < 10)
-			{
-
+			else if(state == StopRobot){
+				robotDrive->MecanumDrive_Cartesian(0,0,0,0);
 			}
-			else if(timer->Get() > 10 && timer->Get() < 15)
-			{
-				robotDrive->MecanumDrive_Cartesian(0,-.2,0,0);
-			}
-
 		}
 
 		void TeleopInit()
@@ -133,6 +114,8 @@ class Robot : public IterativeRobot
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
 			rightLiftServo->Set(90 * !liftState);
+
+			SmartDashboard::PutBoolean("Lift Flap", liftState);
 		}
 
 		void TestPeriodic()
