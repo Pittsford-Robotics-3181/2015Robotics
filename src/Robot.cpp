@@ -6,7 +6,7 @@ class Robot : public IterativeRobot
 {
 	private:
 		bool liftState;
-		
+		bool presetLifting = false;
 		double x, y, rotation, throttle;
 		
 		LiveWindow*             lw;
@@ -109,7 +109,27 @@ class Robot : public IterativeRobot
 //			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
 //				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 //			}
-			liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			if(leftStick->GetRawButton(9))
+			{
+				presetLifting = true;
+				if(abs(encoder->Get()) > abs(-97900))
+				{
+					liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else if(encoder->Get() < abs(-97500))
+				{
+					liftMotor->Set(min(max((1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+
+				}
+				else
+				{
+					presetLifting =false
+				}
+			}
+			if(!presetLifting)
+			{
+				liftMotor->Set(min(max(leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			}
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
