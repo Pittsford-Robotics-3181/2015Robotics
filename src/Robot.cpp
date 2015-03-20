@@ -6,7 +6,8 @@ class Robot : public IterativeRobot
 {
 	private:
 		bool liftState;
-		bool presetLifting = false;
+		bool presetLifting1 = false;
+		bool presetLifting2 = false;
 		double x, y, rotation, throttle;
 		
 		LiveWindow*             lw;
@@ -67,6 +68,8 @@ class Robot : public IterativeRobot
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
 
+			presetLifting1 = false;
+			presetLifting2 = false;
 
 
 			CameraServer::GetInstance()->SetQuality(50);
@@ -85,6 +88,8 @@ class Robot : public IterativeRobot
 		void TeleopInit()
 		{
 			encoder->Reset();
+			presetLifting1= false;
+			presetLifting2 = false;
 		}
 
 		void TeleopPeriodic()
@@ -109,26 +114,51 @@ class Robot : public IterativeRobot
 //			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
 //				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 //			}
-			if(leftStick->GetRawButton(9))
+			if(!lowerLiftSensor->Get())
 			{
-				presetLifting = true;
-				if(abs(encoder->Get()) > abs(-97900))
+				encoder->Reset();
+			}
+
+			if(leftStick->GetRawButton(9) ||  presetLifting1)
+			{
+				presetLifting1 = true;
+				if(encoder->Get() > 98000)
 				{
-					liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 				}
-				else if(encoder->Get() < abs(-97500))
+				else if(encoder->Get() < 97000)
 				{
-					liftMotor->Set(min(max((1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 
 				}
 				else
 				{
-					presetLifting =false
+					presetLifting1 =false;
 				}
 			}
-			if(!presetLifting)
+
+			if( leftStick->GetRawButton(10)|| presetLifting2)
 			{
-				liftMotor->Set(min(max(leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				presetLifting2 = true;
+				if(encoder->Get() > 264000)
+				{
+					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else if(encoder->Get() < 263000)
+				{
+					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+
+				}
+				else
+				{
+					presetLifting2 =false;
+				}
+			}
+
+
+			if(!presetLifting1 && !presetLifting2)
+			{
+				liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			}
 			liftState |= leftStick->GetRawButton(6);
 			liftState &= !leftStick->GetRawButton(4);
@@ -150,6 +180,7 @@ class Robot : public IterativeRobot
 			SmartDashboard::PutBoolean("Encoder Direction", encoder->GetDirection());
 			SmartDashboard::PutBoolean("Encoder Stopped", encoder->GetStopped());
 			SmartDashboard::PutBoolean("Lift Flap", liftState);
+			SmartDashboard::PutBoolean("LowerLiftSensor is activated",!lowerLiftSensor->Get());
 		}
 
 };
