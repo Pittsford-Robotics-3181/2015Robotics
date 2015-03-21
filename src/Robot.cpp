@@ -6,9 +6,15 @@ class Robot : public IterativeRobot
 {
 	private:
 		bool liftState;
-		
+		bool presetLifting0 = false;
+		bool presetLifting1 = false;
+		bool presetLifting2 = false;
 		double x, y, rotation, throttle;
 		
+		const unsigned int lvl0EncoderConstant = 0;
+		const unsigned int lvl1EncoderConstant = 98000;
+		const unsigned int lvl2EncoderConstant = 264000;
+
 		LiveWindow*             lw;
 		
 		PowerDistributionPanel* pdp;
@@ -18,6 +24,8 @@ class Robot : public IterativeRobot
 		CANTalon*               rearRightMotor;
 		CANTalon*               rearLeftMotor;
 		CANTalon*               liftMotor;
+
+		Encoder*				encoder;
 
 		RobotDrive*             robotDrive;
 
@@ -54,6 +62,8 @@ class Robot : public IterativeRobot
 			robotDrive->SetInvertedMotor(RobotDrive::kRearRightMotor,  1);
 			robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor,   0);
 
+			encoder			= new Encoder(0,1,false,Encoder::k4X);
+
 			leftStick       = Joystick::GetStickForPort(0);
 			rightStick      = Joystick::GetStickForPort(1);
 			
@@ -62,6 +72,11 @@ class Robot : public IterativeRobot
 			
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
+
+			presetLifting0 = false;
+			presetLifting1 = false;
+			presetLifting2 = false;
+
 
 			CameraServer::GetInstance()->SetQuality(50);
 			CameraServer::GetInstance()->StartAutomaticCapture("cam1");
@@ -78,10 +93,17 @@ class Robot : public IterativeRobot
 
 		void TeleopInit()
 		{
+			encoder->Reset();
+			presetLifting0 = false;
+			presetLifting1= false;
+			presetLifting2 = false;
 		}
 
 		void TeleopPeriodic()
 		{
+
+			printDiagnostics();
+
 			throttle = (1.0f - rightStick->GetThrottle())/2.0f;
 			if(rightStick->GetPOV() != -1 || rightStick->GetRawButton(5) || rightStick->GetRawButton(6))
 			{
@@ -96,8 +118,71 @@ class Robot : public IterativeRobot
 				rotation = rightStick->GetTwist();
 			}
 			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0.0f);
-			liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
-			liftState |= leftStick->GetRawButton(6);
+//			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
+//				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+//			}
+			if(!lowerLiftSensor->Get())
+			{
+				encoder->Reset();
+			}
+
+			if(leftStick->GetRawButton(11) ||  presetLifting0)
+			{
+				presetLifting0 = true;
+				if(!(!lowerLiftSensor->Get()))
+				{
+					liftState = true;
+					liftMotor->Set(min(max((-1.0f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f), static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else
+				{
+					presetLifting0 =false;
+				}
+			}
+			if(leftStick->GetRawButton(9) ||  presetLifting1)
+			{
+				presetLifting1 = true;
+				if(encoder->Get() > 98000)
+				{
+					liftState= true;
+					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else if(encoder->Get() < 97000)
+				{
+					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+
+				}
+				else
+				{
+					presetLifting1 =false;
+				}
+			}
+
+			if( leftStick->GetRawButton(10)|| presetLifting2)
+			{
+				presetLifting2 = true;
+				if(encoder->Get() > 264000)
+				{
+					liftState = true;
+					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f), static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else if(encoder->Get() < 263000) //263000
+				{
+					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+
+				}
+				else
+				{
+					presetLifting2 =false;
+				}
+			}
+
+
+			if(!presetLifting1 && !presetLifting2 && !presetLifting0)
+			{
+				liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetZ())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+			}
+			liftState |= leftStick->GetRawButton(5);
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
 			rightLiftServo->Set(90 * !liftState);
@@ -107,6 +192,19 @@ class Robot : public IterativeRobot
 		{
 			lw->Run();
 		}
+
+		void printDiagnostics()
+		{
+			SmartDashboard::PutNumber("Encoder Count", encoder->Get());
+			SmartDashboard::PutNumber("Encoder Raw Count", encoder->GetRaw());
+			SmartDashboard::PutNumber("Encoder Period", encoder->GetPeriod());
+			SmartDashboard::PutNumber("Encoder Rate", encoder->GetRate());
+			SmartDashboard::PutBoolean("Encoder Direction", encoder->GetDirection());
+			SmartDashboard::PutBoolean("Encoder Stopped", encoder->GetStopped());
+			SmartDashboard::PutBoolean("Lift Flap", liftState);
+			SmartDashboard::PutBoolean("LowerLiftSensor is activated",!lowerLiftSensor->Get());
+		}
+
 };
 
 START_ROBOT_CLASS(Robot);
