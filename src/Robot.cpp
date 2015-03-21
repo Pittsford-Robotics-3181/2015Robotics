@@ -11,6 +11,10 @@ class Robot : public IterativeRobot
 		bool presetLifting2 = false;
 		double x, y, rotation, throttle;
 		
+		const unsigned int lvl0EncoderConstant = 0;
+		const unsigned int lvl1EncoderConstant = 98000;
+		const unsigned int lvl2EncoderConstant = 264000;
+
 		LiveWindow*             lw;
 		
 		PowerDistributionPanel* pdp;
@@ -176,9 +180,9 @@ class Robot : public IterativeRobot
 
 			if(!presetLifting1 && !presetLifting2 && !presetLifting0)
 			{
-				liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetZ())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			}
-			liftState |= leftStick->GetRawButton(6);
+			liftState |= leftStick->GetRawButton(5);
 			liftState &= !leftStick->GetRawButton(4);
 			leftLiftServo->Set(90 * liftState);
 			rightLiftServo->Set(90 * !liftState);
