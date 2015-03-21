@@ -6,6 +6,7 @@ class Robot : public IterativeRobot
 {
 	private:
 		bool liftState;
+		bool presetLifting0 = false;
 		bool presetLifting1 = false;
 		bool presetLifting2 = false;
 		double x, y, rotation, throttle;
@@ -68,6 +69,7 @@ class Robot : public IterativeRobot
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
 
+			presetLifting0 = false;
 			presetLifting1 = false;
 			presetLifting2 = false;
 
@@ -88,6 +90,7 @@ class Robot : public IterativeRobot
 		void TeleopInit()
 		{
 			encoder->Reset();
+			presetLifting0 = false;
 			presetLifting1= false;
 			presetLifting2 = false;
 		}
@@ -119,6 +122,18 @@ class Robot : public IterativeRobot
 				encoder->Reset();
 			}
 
+			if(leftStick->GetRawButton(11) ||  presetLifting0)
+			{
+				presetLifting0 = true;
+				if(!(!lowerLiftSensor->Get()))
+				{
+					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
+				}
+				else
+				{
+					presetLifting0 =false;
+				}
+			}
 			if(leftStick->GetRawButton(9) ||  presetLifting1)
 			{
 				presetLifting1 = true;
@@ -144,7 +159,7 @@ class Robot : public IterativeRobot
 				{
 					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 				}
-				else if(encoder->Get() < 263000)
+				else if(encoder->Get() < 263000) //263000
 				{
 					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 
@@ -156,7 +171,7 @@ class Robot : public IterativeRobot
 			}
 
 
-			if(!presetLifting1 && !presetLifting2)
+			if(!presetLifting1 && !presetLifting2 && !presetLifting0)
 			{
 				liftMotor->Set(min(max((leftStick->GetY() * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 			}
