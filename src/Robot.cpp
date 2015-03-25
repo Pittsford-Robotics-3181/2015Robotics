@@ -95,7 +95,7 @@ class Robot : public IterativeRobot
 
 			encoder 		= new Encoder(0,1,false,Encoder::k4X);
 
-			gyro			= new Gyro(0);
+			gyro			= new Gyro(1);
 
 			timer 			= new Timer();
 
@@ -178,20 +178,30 @@ class Robot : public IterativeRobot
 			}
 			else if(state == DriveToZone)
 			{
-				if(timer->Get() <= 1)
+				if(timer->Get() < 2)
 				{
 					//robotDrive->MecanumDrive_Cartesian(0,0,-.3,0);
 					//robotDrive->MecanumDrive_Cartesian(0,-.8,0,0);
 					// at .8 speed it goes 73inches per sec
-					if(!(abs(gyro->GetAngle()) >= 90)){
-					robotDrive->MecanumDrive_Cartesian(0,0,0.5,0);
+					if((abs(gyro->GetAngle()) <= 90))
+					{
+						robotDrive->MecanumDrive_Cartesian(0,0,-0.2,0);
+						SmartDashboard::PutNumber("Gyro Angle",gyro->GetAngle());
+					}
+					else
+					{
+						robotDrive->MecanumDrive_Cartesian(0,0,0,0);
 					}
 				}
 
 //				else if(timer->Get() <= 0 && timer->Get() <= .5){
 //					robotDrive->MecanumDrive_Cartesian(0,-.8,0,0);
 //				}
-				else if(timer->Get() >.1)
+				else if(timer->Get() < (2+ 1.45))
+				{
+					robotDrive->MecanumDrive_Cartesian(0,-0.6,0,0);
+				}
+				else if(timer->Get() > (2+ 1.45))
 				{
 					robotDrive->MecanumDrive_Cartesian(0,0,0,0);
 					state = DropTote;
@@ -207,7 +217,7 @@ class Robot : public IterativeRobot
 				else
 				{
 					liftMotor->Set(0);
-					liftState = false;
+					liftState = true;
 					leftLiftServo->Set(90 * liftState);
 					rightLiftServo->Set(90 * !liftState);
 					state = TelePosition;
@@ -253,7 +263,7 @@ class Robot : public IterativeRobot
 				y = rightStick->GetY();
 				rotation = rightStick->GetTwist();
 			}
-			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0.0f);
+			robotDrive->MecanumDrive_Cartesian(x * throttle, y * throttle, rotation * throttle, 0);
 //			if(leftStick->GetRawButton(7) && encoder->GetDistance() > 0 ){
 //				liftMotor->Set(min(max((-1 * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) * (1.0f - leftStick->GetThrottle())/2.0f, static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 //			}
@@ -290,6 +300,7 @@ class Robot : public IterativeRobot
 				}
 				else
 				{
+					liftState = false;
 					presetLifting1 =false;
 				}
 			}
@@ -297,12 +308,12 @@ class Robot : public IterativeRobot
 			if( leftStick->GetRawButton(10)|| presetLifting2)
 			{
 				presetLifting2 = true;
-				if(encoder->Get() > 264000)
+				if(encoder->Get() > 270000)
 				{
 					liftState = true;
 					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f), static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 				}
-				else if(encoder->Get() < 263000) //263000
+				else if(encoder->Get() < 269000) //263000
 				{
 					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 
