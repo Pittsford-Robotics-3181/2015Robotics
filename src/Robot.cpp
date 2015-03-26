@@ -27,6 +27,10 @@ class Robot : public IterativeRobot
 		
 		double x, y, rotation, throttle;
 		
+		const unsigned int lvl0EncoderConstant = 0;
+		const unsigned int lvl1EncoderConstant = lvl1EncoderConstant;
+		const unsigned int lvl2EncoderConstant = lvl2EncoderConstant;
+
 		LiveWindow*             lw;
 		
 		PowerDistributionPanel* pdp;
@@ -37,6 +41,8 @@ class Robot : public IterativeRobot
 		CANTalon*               rearLeftMotor;
 
 		CANTalon*               liftMotor;
+
+		Encoder*				encoder;
 
 		RobotDrive*             robotDrive;
 
@@ -52,7 +58,6 @@ class Robot : public IterativeRobot
 		
 		USBCamera*              camera;
 
-		Encoder*				encoder;
 
 		Gyro*					gyro;
 
@@ -84,6 +89,8 @@ class Robot : public IterativeRobot
 			robotDrive->SetInvertedMotor(RobotDrive::kRearLeftMotor,   0);
 			robotDrive->SetCANJaguarSyncGroup(0);
 
+			encoder			= new Encoder(0,1,false,Encoder::k4X);
+
 			leftStick       = Joystick::GetStickForPort(0);
 			rightStick      = Joystick::GetStickForPort(1);
 			
@@ -92,6 +99,11 @@ class Robot : public IterativeRobot
 			
 			leftLiftServo   = new Servo(0);
 			rightLiftServo  = new Servo(1);
+
+			presetLifting0 = false;
+			presetLifting1 = false;
+			presetLifting2 = false;
+
 
 			encoder 		= new Encoder(0,1,false,Encoder::k4X);
 
@@ -139,6 +151,9 @@ class Robot : public IterativeRobot
 //				}
 //			}
 
+
+
+			// the new stuf ends
 			SmartDashboard::PutNumber("Auto state", state);
 			if(state == LowerLift)
 			{
@@ -247,7 +262,6 @@ class Robot : public IterativeRobot
 
 		void TeleopPeriodic()
 		{
-
 			printDiagnostics();
 
 			throttle = (1.0f - rightStick->GetThrottle())/2.0f;
@@ -288,12 +302,12 @@ class Robot : public IterativeRobot
 			if(leftStick->GetRawButton(9) ||  presetLifting1)
 			{
 				presetLifting1 = true;
-				if(encoder->Get() > 98000)
+				if(encoder->Get() > lvl1EncoderConstant)
 				{
 					liftState= true;
 					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 				}
-				else if(encoder->Get() < 97000)
+				else if(encoder->Get() < lvl1EncoderConstant - 1000)
 				{
 					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 
@@ -308,12 +322,12 @@ class Robot : public IterativeRobot
 			if( leftStick->GetRawButton(10)|| presetLifting2)
 			{
 				presetLifting2 = true;
-				if(encoder->Get() > 270000)
+				if(encoder->Get() > lvl2EncoderConstant)
 				{
 					liftState = true;
 					liftMotor->Set(min(max((-0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f), static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 				}
-				else if(encoder->Get() < 269000) //263000
+				else if(encoder->Get() < lvl2EncoderConstant- 1000) //263000
 				{
 					liftMotor->Set(min(max((0.8f * 0.95f + static_cast<float>(sin(GetClock() * 500.0f)) * 0.05f) , static_cast<float>(-lowerLiftSensor->Get())), static_cast<float>(upperLiftSensor->Get())));
 
@@ -323,7 +337,9 @@ class Robot : public IterativeRobot
 					presetLifting2 =false;
 				}
 			}
-
+			presetLifting0 &= fabs(leftStick->GetY()) < 0.5;
+			presetLifting1 &= fabs(leftStick->GetY()) < 0.5;
+			presetLifting2 &= fabs(leftStick->GetY()) < 0.5;
 
 			if(!presetLifting1 && !presetLifting2 && !presetLifting0)
 			{
@@ -334,6 +350,8 @@ class Robot : public IterativeRobot
 			leftLiftServo->Set(90 * liftState);
 			rightLiftServo->Set(90 * !liftState);
 		}
+			// the new stuff ends
+
 
 		void TestPeriodic()
 		{
@@ -348,10 +366,15 @@ class Robot : public IterativeRobot
 			SmartDashboard::PutNumber("Encoder Rate", encoder->GetRate());
 			SmartDashboard::PutBoolean("Encoder Direction", encoder->GetDirection());
 			SmartDashboard::PutBoolean("Encoder Stopped", encoder->GetStopped());
+
 			SmartDashboard::PutNumber("Gyro Angle",gyro->GetAngle());
 			SmartDashboard::PutBoolean("Lift Flap", liftState);
 			SmartDashboard::PutBoolean("LowerLiftSensor is activated",!lowerLiftSensor->Get());
+
+			SmartDashboard::PutBoolean("Lift Flap", liftState);
+			SmartDashboard::PutBoolean("LowerLiftSensor is activated",!lowerLiftSensor->Get());
 		}
+
 };
 
 START_ROBOT_CLASS(Robot);
